@@ -88,8 +88,41 @@ const colorTranslations = {
     "Azulnegro":    { es: "Azulnegro",    en: "Blue-Black" }
 };
 
+// Abreviaturas cortas para móvil (pantallas estrechas)
+const colorShort = {
+    "Blanco":       { es: "Blanc",   en: "White" },
+    "Negro":        { es: "Negro",   en: "Black" },
+    "Rojo":         { es: "Rojo",    en: "Red" },
+    "Azul":         { es: "Azul",    en: "Blue" },
+    "Amarillo":     { es: "Amaril",  en: "Yellow" },
+    "Verde":        { es: "Verde",   en: "Green" },
+    "Violeta":      { es: "Violet",  en: "Purple" },
+    "Granate":      { es: "Granat",  en: "Maroon" },
+    "Naranja":      { es: "Naranj",  en: "Orange" },
+    "Celeste":      { es: "Celest",  en: "Sky" },
+    "Rojiblanco":   { es: "R-Blan",  en: "R-Wht" },
+    "Azulgrana":    { es: "A-Gran",  en: "B-Red" },
+    "Rojinegro":    { es: "R-Negr",  en: "R-Blk" },
+    "Blanquinegro": { es: "B-Negr",  en: "B-Blk" },
+    "Verdiblanco":  { es: "V-Blan",  en: "G-Wht" },
+    "Blanquiazul":  { es: "B-Azul",  en: "B-Blu" },
+    "Azulnegro":    { es: "A-Negr",  en: "B-Blk" }
+};
+
 let currentLang = 'es';
+
+// ¿Estamos en móvil? Devuelve true si la ventana es estrecha.
+function isMobile() {
+    return window.innerWidth <= 700;
+}
+
 function translateColor(color) {
+    // En móvil usamos abreviatura corta
+    if (isMobile()) {
+        const shortEntry = colorShort[color];
+        if (shortEntry) return shortEntry[currentLang];
+    }
+    // En desktop, nombre completo
     const entry = colorTranslations[color];
     return entry ? entry[currentLang] : color;
 }
@@ -965,5 +998,10 @@ function init() {
         showDailyResultScreen(data);
     }
 }
+
+// Si el usuario gira el móvil o cambia el tamaño, refrescamos los colores
+window.addEventListener('resize', () => {
+    refreshColorCells();
+});
 
 init();
