@@ -7,10 +7,25 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Selector de idioma -->
-    <div id="lang-switcher">
-        <button class="lang-btn active" data-lang="es" title="Español">🇪🇸</button>
-        <button class="lang-btn" data-lang="en" title="English">🇬🇧</button>
+    <!-- Barra superior con info, stats, racha e idioma -->
+    <div id="top-bar">
+        <button id="info-btn" title="Cómo jugar">ℹ️</button>
+        <button id="stats-btn" title="Estadísticas">📊</button>
+
+        <!-- Cápsula de racha -->
+        <div id="streak-capsule" title="Racha de victorias">
+            <div id="streak-ball-wrapper">
+                <div id="streak-aura"></div>
+                <span id="streak-ball">🏐</span>
+                <span id="streak-extra"></span>
+            </div>
+            <span id="streak-count">0</span>
+        </div>
+
+        <div id="lang-switcher">
+            <button class="lang-btn active" data-lang="es" title="Español">🇪🇸</button>
+            <button class="lang-btn" data-lang="en" title="English">🇬🇧</button>
+        </div>
     </div>
 
     <div id="game-container">
@@ -28,7 +43,6 @@
         </div>
 
         <div id="results-table">
-            <!-- Cabeceras ocultas hasta el primer intento -->
             <div class="header-row hidden" id="header-row">
                 <div class="team-info-placeholder"></div>
                 <div class="cell-head" data-i18n="colLeague">Liga</div>
@@ -47,8 +61,8 @@
     <div id="victory-overlay" class="hidden">
         <div id="victory-card">
             <div class="confetti-emoji">🏆</div>
-            <h2 data-i18n="victoryTitle">¡Victoria!</h2>
-            <p>
+            <h2 id="victory-heading" data-i18n="victoryTitle">¡Victoria!</h2>
+            <p id="victory-message">
                 <span data-i18n="victoryTextBefore">Has adivinado el equipo en</span>
                 <span id="victory-attempts">0</span>
                 <span data-i18n="victoryTextAfter">intentos</span>
@@ -57,7 +71,45 @@
                 <img id="victory-team-logo" src="" alt="">
                 <span id="victory-team-name"></span>
             </div>
-            <button id="restart-btn" data-i18n="restartBtn">Jugar de nuevo</button>
+            <div id="mini-stats"></div>
+            <div id="countdown-box">
+                <div class="countdown-label" data-i18n="nextGameIn">Próximo equipo en</div>
+                <div id="countdown-timer">--:--:--</div>
+            </div>
+            <button id="view-stats-btn" data-i18n="statsTitle">Estadísticas</button>
+        </div>
+    </div>
+
+    <!-- Modal de estadísticas -->
+    <div id="stats-overlay" class="hidden">
+        <div id="stats-card">
+            <h2 data-i18n="statsTitle">Estadísticas</h2>
+            <div id="stats-grid"></div>
+            <button id="close-stats-btn" data-i18n="closeBtn">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal de "Nuevo nivel" -->
+    <div id="levelup-overlay" class="hidden">
+        <div id="levelup-card">
+            <div class="levelup-title" data-i18n="levelUpTitle">¡NUEVO NIVEL!</div>
+            <div id="levelup-ball-wrapper">
+                <div id="levelup-aura"></div>
+                <span id="levelup-ball">⚽</span>
+                <span id="levelup-extra"></span>
+            </div>
+            <div id="levelup-tier-name">Tier</div>
+            <div id="levelup-streak-number">Racha: 0</div>
+            <button id="levelup-close-btn" data-i18n="closeBtn">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal "Cómo jugar" -->
+    <div id="info-overlay" class="hidden">
+        <div id="info-card">
+            <h2 data-i18n="infoTitle">Cómo jugar</h2>
+            <div id="info-content"></div>
+            <button id="close-info-btn" data-i18n="closeBtn">Cerrar</button>
         </div>
     </div>
 
