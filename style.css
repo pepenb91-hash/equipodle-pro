@@ -152,7 +152,7 @@ h1 {
     font-variant-numeric: tabular-nums;
 }
 
-/* Tiers del balón (igual que antes) */
+/* Tiers del balón */
 #streak-capsule.tier-1 #streak-ball { filter: none; }
 #streak-capsule.tier-2 #streak-ball { filter: none; }
 #streak-capsule.tier-2 #streak-aura {
@@ -340,9 +340,7 @@ input:focus {
     font-size: 0.95rem;
 }
 
-/* ---------- TABLA DE INTENTOS (responsive) ----------
- * Uso variables CSS para controlar tamaños desde un solo sitio.
- * En móvil las reduzco para que todo quepa. */
+/* ---------- TABLA DE INTENTOS ---------- */
 :root {
     --square-size: 72px;
     --team-col-width: 170px;
@@ -351,7 +349,7 @@ input:focus {
 
 #results-table {
     width: 100%;
-    overflow-x: auto;   /* por si acaso en resoluciones muy estrechas */
+    overflow-x: auto;
 }
 .header-row, .guess-row {
     display: grid;
@@ -445,7 +443,6 @@ input:focus {
     color: #222;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
 }
-
 /* ---------- Pantalla de Victoria ---------- */
 #victory-overlay {
     position: fixed;
@@ -575,7 +572,7 @@ input:focus {
 }
 #view-stats-btn:active { transform: translateY(0); }
 
-/* ---------- Modal de Estadísticas ---------- */
+/* ---------- Modales Estadísticas y Cómo jugar ---------- */
 #stats-overlay,
 #info-overlay {
     position: fixed;
@@ -583,11 +580,11 @@ input:focus {
     background: rgba(0, 0, 0, 0.85);
     z-index: 1001;
     display: flex;
-    align-items: flex-start;       /* ← antes: center */
+    align-items: flex-start;
     justify-content: center;
     backdrop-filter: blur(6px);
     animation: fadeIn 0.3s ease-out;
-    padding: 30px 15px;            /* ← antes: 15px */
+    padding: 30px 15px;
     box-sizing: border-box;
     overflow-y: auto;
 }
@@ -812,18 +809,19 @@ input:focus {
 }
 
 /* ==========================================================
-   RESPONSIVE - Móvil (pantallas < 600px)
+   RESPONSIVE - Móvil (pantallas <= 700px)
    ========================================================== */
 @media (max-width: 700px) {
     :root {
-        --square-size: 44px;
-        --team-col-width: 95px;
-        --grid-gap: 4px;
+        --square-size: 40px;
+        --team-col-width: 78px;
+        --grid-gap: 3px;
     }
 
     #game-container {
         margin-top: 65px;
-        padding: 0 4px 40px;
+        padding: 0 2px 40px;
+        max-width: 100%;
     }
 
     h1 { font-size: 1.6rem; margin: 5px 0 12px; }
@@ -870,32 +868,34 @@ input:focus {
         margin-right: 8px;
     }
 
+    /* Fila de equipo: escudo pequeño, nombre truncado */
     .row-shield .shield-img,
     .row-shield .shield-fallback {
-        width: 26px; height: 26px;
-        margin-right: 6px;
-        font-size: 0.65rem;
+        width: 22px; height: 22px;
+        margin-right: 5px;
+        font-size: 0.55rem;
     }
-
-    .team-cell-info span { font-size: 0.72rem; }
-    .cell-head { font-size: 0.55rem; letter-spacing: 0.3px; }
+    .team-cell-info { padding-right: 4px; }
+    .team-cell-info span { font-size: 0.65rem; }
+    .cell-head { font-size: 0.5rem; letter-spacing: 0; }
 
     .square {
-        border-radius: 7px;
-        padding: 2px;
+        border-radius: 6px;
+        padding: 1px;
     }
     .square-value {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
         padding: 0 1px;
+        letter-spacing: -0.2px;
     }
 
-    /* Mini stats: más compactas en móvil */
+    /* Mini stats */
     #mini-stats { gap: 6px; }
     .mini-stat { padding: 8px 3px; }
     .mini-stat-value { font-size: 1.15rem; }
     .mini-stat-label { font-size: 0.55rem; }
 
-    /* Victoria más compacta */
+    /* Victoria */
     #victory-card { padding: 22px 18px; }
     .confetti-emoji { font-size: 2.8rem; }
     #victory-card h2 { font-size: 1.7rem; }
@@ -919,7 +919,7 @@ input:focus {
     .info-legend-swatch { width: 32px; height: 32px; font-size: 0.7rem; }
     .info-legend-text { font-size: 0.8rem; }
 
-    /* Level up más compacto */
+    /* Level up */
     #levelup-card { padding: 25px 20px; }
     .levelup-title { font-size: 1.3rem; letter-spacing: 2px; }
     #levelup-ball-wrapper { width: 90px; height: 90px; }
@@ -928,19 +928,19 @@ input:focus {
     #levelup-tier-name { font-size: 1.1rem; }
 }
 
-/* Pantallas MUY pequeñas (< 380px) - iPhone SE, etc. */
+/* Pantallas MUY pequeñas (<= 380px) */
 @media (max-width: 380px) {
     :root {
-        --square-size: 38px;
-        --team-col-width: 80px;
-        --grid-gap: 3px;
+        --square-size: 34px;
+        --team-col-width: 65px;
+        --grid-gap: 2px;
     }
-    .team-cell-info span { font-size: 0.65rem; }
-    .cell-head { font-size: 0.5rem; }
-    .square-value { font-size: 0.6rem; }
+    .team-cell-info span { font-size: 0.6rem; }
+    .cell-head { font-size: 0.45rem; }
+    .square-value { font-size: 0.52rem; }
     .row-shield .shield-img,
     .row-shield .shield-fallback {
-        width: 22px; height: 22px;
-        margin-right: 4px;
+        width: 18px; height: 18px;
+        margin-right: 3px;
     }
 }
