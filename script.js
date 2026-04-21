@@ -6,8 +6,8 @@ const i18n = {
         colLeague: "Liga",
         colTitles: "Títulos",
         colColor: "Color",
-        colBudget: "Presup.",
-        colYears: "1ª Div",
+        colBudget: "Valor €",
+        colYears: "Años en 1ª",
         colBrand: "Marca",
         colStadium: "Estadio",
         victoryTitle: "¡Victoria!",
@@ -39,8 +39,8 @@ const i18n = {
         colLeague: "League",
         colTitles: "Titles",
         colColor: "Color",
-        colBudget: "Budget",
-        colYears: "Top Flight",
+        colBudget: "Squad €",
+        colYears: "Years in Top",
         colBrand: "Brand",
         colStadium: "Stadium",
         victoryTitle: "Victory!",
@@ -69,23 +69,23 @@ const i18n = {
 };
 
 const colorTranslations = {
-    "Blanco":       { es: "Blanco",       en: "White" },
-    "Negro":        { es: "Negro",        en: "Black" },
-    "Rojo":         { es: "Rojo",         en: "Red" },
-    "Azul":         { es: "Azul",         en: "Blue" },
-    "Amarillo":     { es: "Amarillo",     en: "Yellow" },
-    "Verde":        { es: "Verde",        en: "Green" },
-    "Violeta":      { es: "Violeta",      en: "Purple" },
-    "Granate":      { es: "Granate",      en: "Maroon" },
-    "Naranja":      { es: "Naranja",      en: "Orange" },
-    "Celeste":      { es: "Celeste",      en: "Sky Blue" },
-    "Rojiblanco":   { es: "Rojiblanco",   en: "Red-White" },
-    "Azulgrana":    { es: "Azulgrana",    en: "Blue-Red" },
-    "Rojinegro":    { es: "Rojinegro",    en: "Red-Black" },
-    "Blanquinegro": { es: "Blanquinegro", en: "Black-White" },
-    "Verdiblanco":  { es: "Verdiblanco",  en: "Green-White" },
-    "Blanquiazul":  { es: "Blanquiazul",  en: "Blue-White" },
-    "Azulnegro":    { es: "Azulnegro",    en: "Blue-Black" }
+    "Blanco":       { es: "Blanco",        en: "White" },
+    "Negro":        { es: "Negro",         en: "Black" },
+    "Rojo":         { es: "Rojo",          en: "Red" },
+    "Azul":         { es: "Azul",          en: "Blue" },
+    "Amarillo":     { es: "Amarillo",      en: "Yellow" },
+    "Verde":        { es: "Verde",         en: "Green" },
+    "Violeta":      { es: "Violeta",       en: "Purple" },
+    "Granate":      { es: "Granate",       en: "Maroon" },
+    "Naranja":      { es: "Naranja",       en: "Orange" },
+    "Celeste":      { es: "Celeste",       en: "Sky Blue" },
+    "Rojiblanco":   { es: "Rojo-Blanco",   en: "Red-White" },
+    "Azulgrana":    { es: "Azul-Granate",  en: "Blue-Maroon" },
+    "Rojinegro":    { es: "Rojo-Negro",    en: "Red-Black" },
+    "Blanquinegro": { es: "Blanco-Negro",  en: "White-Black" },
+    "Verdiblanco":  { es: "Verde-Blanco",  en: "Green-White" },
+    "Blanquiazul":  { es: "Blanco-Azul",   en: "White-Blue" },
+    "Azulnegro":    { es: "Azul-Negro",    en: "Blue-Black" }
 };
 
 // Abreviaturas cortas para móvil (pantallas estrechas)
@@ -101,11 +101,11 @@ const colorShort = {
     "Naranja":      { es: "Naranj",  en: "Orange" },
     "Celeste":      { es: "Celest",  en: "Sky" },
     "Rojiblanco":   { es: "R-Blan",  en: "R-Wht" },
-    "Azulgrana":    { es: "A-Gran",  en: "B-Red" },
+    "Azulgrana":    { es: "A-Gran",  en: "B-Mrn" },
     "Rojinegro":    { es: "R-Negr",  en: "R-Blk" },
-    "Blanquinegro": { es: "B-Negr",  en: "B-Blk" },
+    "Blanquinegro": { es: "B-Negr",  en: "W-Blk" },
     "Verdiblanco":  { es: "V-Blan",  en: "G-Wht" },
-    "Blanquiazul":  { es: "B-Azul",  en: "B-Blu" },
+    "Blanquiazul":  { es: "B-Azul",  en: "W-Blu" },
     "Azulnegro":    { es: "A-Negr",  en: "B-Blk" }
 };
 

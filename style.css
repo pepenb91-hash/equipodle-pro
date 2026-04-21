@@ -381,10 +381,11 @@ input:focus {
 }
 .cell-head {
     font-size: 0.7rem;
-    color: #aaa;
+    color: #2ed573;
     text-transform: uppercase;
     font-weight: 800;
     text-align: center;
+    letter-spacing: 0.5px;
 }
 
 .square {
