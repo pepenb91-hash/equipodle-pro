@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipodle Pro - Las 5 Grandes Ligas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Selector de idioma -->
+    <div id="lang-switcher">
+        <button class="lang-btn active" data-lang="es" title="Español">🇪🇸</button>
+        <button class="lang-btn" data-lang="en" title="English">🇬🇧</button>
+    </div>
+
+    <div id="game-container">
+        <h1>Equipodle <span style="font-size: 0.5em; color: #2ed573;">Pro</span></h1>
+
+        <div id="attempts-counter">
+            <div class="attempts-title" data-i18n="attemptsTitle">Número de intentos</div>
+            <div id="attempts-number">0</div>
+            <div id="attempts-balls"></div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="team-input" placeholder="Escribe el nombre de un equipo..." autocomplete="off">
+            <div id="autocomplete-list" class="autocomplete-items"></div>
+        </div>
+
+        <div id="results-table">
+            <!-- Cabeceras ocultas hasta el primer intento -->
+            <div class="header-row hidden" id="header-row">
+                <div class="team-info-placeholder"></div>
+                <div class="cell-head" data-i18n="colLeague">Liga</div>
+                <div class="cell-head" data-i18n="colTitles">Títulos</div>
+                <div class="cell-head" data-i18n="colColor">Color</div>
+                <div class="cell-head" data-i18n="colBudget">Presup.</div>
+                <div class="cell-head" data-i18n="colYears">1ª Div</div>
+                <div class="cell-head" data-i18n="colBrand">Marca</div>
+                <div class="cell-head" data-i18n="colStadium">Estadio</div>
+            </div>
+            <div id="guesses-container"></div>
+        </div>
+    </div>
+
+    <!-- Pantalla de victoria -->
+    <div id="victory-overlay" class="hidden">
+        <div id="victory-card">
+            <div class="confetti-emoji">🏆</div>
+            <h2 data-i18n="victoryTitle">¡Victoria!</h2>
+            <p>
+                <span data-i18n="victoryTextBefore">Has adivinado el equipo en</span>
+                <span id="victory-attempts">0</span>
+                <span data-i18n="victoryTextAfter">intentos</span>
+            </p>
+            <div id="victory-team">
+                <img id="victory-team-logo" src="" alt="">
+                <span id="victory-team-name"></span>
+            </div>
+            <button id="restart-btn" data-i18n="restartBtn">Jugar de nuevo</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

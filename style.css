@@ -1,0 +1,307 @@
+body {
+    background-color: #0d0d0d;
+    color: #f0f0f0;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    background-image: url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1920&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 1;
+}
+#game-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    padding-bottom: 60px;
+}
+
+/* ---------- Selector de idioma ---------- */
+#lang-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+    background: rgba(30, 30, 30, 0.8);
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid #333;
+}
+.lang-btn {
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.5;
+}
+.lang-btn:hover { opacity: 0.85; }
+.lang-btn.active {
+    opacity: 1;
+    border-color: #2ed573;
+    background: rgba(46, 213, 115, 0.1);
+}
+
+#attempts-counter {
+    background-color: rgba(30, 30, 30, 0.8);
+    padding: 15px 40px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    border: 1px solid #333;
+    text-align: center;
+}
+.attempts-title { font-size: 0.9rem; color: #aaa; letter-spacing: 1px; text-transform: uppercase; }
+#attempts-number { font-size: 2.5rem; font-weight: bold; color: #2ed573; margin: 5px 0; }
+#attempts-balls { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; max-width: 300px; }
+
+.search-box { position: relative; width: 100%; max-width: 500px; margin-bottom: 40px; }
+input {
+    width: 100%;
+    padding: 18px;
+    border-radius: 12px;
+    border: 2px solid #3a3a3a;
+    background: #1a1a1a;
+    color: white;
+    font-size: 1.1rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus {
+    border-color: #2ed573;
+    box-shadow: 0 0 0 3px rgba(46, 213, 115, 0.2);
+}
+
+.autocomplete-items {
+    position: absolute;
+    width: 100%;
+    background: #252525;
+    border-radius: 10px;
+    z-index: 100;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.autocomplete-items div {
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    transition: background 0.15s;
+}
+.autocomplete-items div:last-child { border-bottom: none; }
+.autocomplete-items div:hover,
+.autocomplete-items div.active {
+    background: #333;
+}
+
+/* ---------- Escudos (con fallback) ---------- */
+.shield-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.shield-img {
+    object-fit: contain;
+    background: white;
+    border-radius: 4px;
+    padding: 2px;
+    box-sizing: border-box;
+}
+.shield-fallback {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: #2ed573;
+    color: #000;
+    font-weight: bold;
+    border-radius: 4px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.suggestion-shield .shield-img,
+.suggestion-shield .shield-fallback {
+    width: 28px; height: 28px;
+    margin-right: 12px;
+    font-size: 0.7rem;
+}
+.row-shield .shield-img,
+.row-shield .shield-fallback {
+    width: 38px; height: 38px;
+    margin-right: 10px;
+    font-size: 0.85rem;
+}
+.victory-shield .shield-img,
+.victory-shield .shield-fallback {
+    width: 50px; height: 50px;
+    margin-right: 15px;
+    padding: 4px;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.header-row, .guess-row {
+    display: grid;
+    grid-template-columns: 220px repeat(7, 85px);
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.hidden { display: none !important; }
+
+.team-info-placeholder { width: 220px; }
+.team-cell-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+}
+.team-cell-info span { font-weight: bold; font-size: 1rem; color: #fff; text-align: right; }
+.cell-head { font-size: 0.75rem; color: #aaa; text-transform: uppercase; font-weight: 800; text-align: center; }
+
+.square {
+    position: relative;
+    width: 85px; height: 85px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: #1e1e1e;
+    font-size: 1rem; font-weight: 800;
+    animation: popIn 0.4s ease-out forwards; opacity: 0;
+    text-align: center;
+    padding: 4px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+@keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.correct { background-color: #2ecc71 !important; color: #fff; }
+.partial { background-color: #f1c40f !important; color: #222; }
+.wrong   { background-color: #e74c3c !important; color: #fff; }
+
+/* ---------- Flecha SVG de fondo ---------- */
+.square-bg-arrow {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    user-select: none;
+}
+.square-bg-arrow svg {
+    width: 70%;
+    height: 70%;
+    opacity: 0.28;
+}
+.square.partial .square-bg-arrow svg { opacity: 0.32; }
+
+.square-value {
+    position: relative;
+    z-index: 2;
+    font-size: 1.05rem;
+    font-weight: 800;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    letter-spacing: 0.3px;
+}
+.square.partial .square-value {
+    color: #222;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ---------- Pantalla de Victoria ---------- */
+#victory-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp {
+    from { transform: translateY(30px) scale(0.9); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+#victory-card {
+    background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+    border: 2px solid #2ed573;
+    border-radius: 20px;
+    padding: 40px 50px;
+    text-align: center;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(46, 213, 115, 0.3);
+    animation: slideUp 0.5s ease-out;
+}
+.confetti-emoji {
+    font-size: 4rem;
+    margin-bottom: 10px;
+    animation: bounce 1s ease-in-out infinite alternate;
+}
+@keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+}
+#victory-card h2 {
+    font-size: 2.5rem;
+    margin: 0 0 10px;
+    color: #2ed573;
+    letter-spacing: 1px;
+}
+#victory-card p { color: #ccc; margin-bottom: 20px; }
+#victory-attempts { color: #2ed573; font-weight: bold; font-size: 1.2em; }
+
+#victory-team {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #111;
+    padding: 15px 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+#victory-team-name { font-weight: bold; font-size: 1.3rem; }
+
+#restart-btn {
+    background: #2ed573;
+    color: #000;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.2s;
+    letter-spacing: 0.5px;
+}
+#restart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
+}
+#restart-btn:active { transform: translateY(0); }
