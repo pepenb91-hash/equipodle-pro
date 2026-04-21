@@ -766,11 +766,14 @@ async function makeGuess(userTeam) {
         await new Promise(r => setTimeout(r, REVEAL_DELAY));
     }
 
-    if (userTeam.name === targetTeam.name) {
+if (userTeam.name === targetTeam.name) {
         gameOver = true;
         input.disabled = true;
         const result = recordGameResult(true, attemptsCount, targetTeam);
         updateStreakCapsule(loadData().stats.currentStreak);
+
+        // 🎆 Lanzamos fuegos artificiales
+        launchFireworks();
 
         setTimeout(() => {
             const data = loadData();
@@ -779,7 +782,7 @@ async function makeGuess(userTeam) {
             } else {
                 showDailyResultScreen(data);
             }
-        }, 800);
+        }, 2200); // esperamos más tiempo para disfrutar los fuegos
     }
 }
 
@@ -1003,5 +1006,49 @@ function init() {
 window.addEventListener('resize', () => {
     refreshColorCells();
 });
+
+// ---------- FUEGOS ARTIFICIALES 🎆 ----------
+function launchFireworks() {
+    // Si por alguna razón no cargó la librería, no rompe nada
+    if (typeof confetti === 'undefined') return;
+
+    const duration = 2000; // 2 segundos de espectáculo
+    const animationEnd = Date.now() + duration;
+    const colors = ['#2ed573', '#ffd700', '#e74c3c', '#ffffff', '#f1c40f'];
+
+    const interval = setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            return;
+        }
+
+        // Dos explosiones por tick: izquierda y derecha
+        confetti({
+            particleCount: 60,
+            angle: 60,
+            spread: 70,
+            origin: { x: Math.random() * 0.3, y: Math.random() * 0.5 + 0.2 },
+            colors: colors,
+            startVelocity: 55,
+            gravity: 0.9,
+            scalar: 1.1,
+            ticks: 200
+        });
+
+        confetti({
+            particleCount: 60,
+            angle: 120,
+            spread: 70,
+            origin: { x: 1 - Math.random() * 0.3, y: Math.random() * 0.5 + 0.2 },
+            colors: colors,
+            startVelocity: 55,
+            gravity: 0.9,
+            scalar: 1.1,
+            ticks: 200
+        });
+    }, 350); // una ráfaga cada 350ms
+}
 
 init();
