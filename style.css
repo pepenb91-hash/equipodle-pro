@@ -555,6 +555,31 @@ input:focus {
 }
 
 #view-stats-btn {
+    background: transparent;
+    color: #2ed573;
+    border: 2px solid #2ed573;
+    padding: 13px 32px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.5px;
+    width: 100%;
+}
+#view-stats-btn:hover {
+    background: #2ed573;
+    color: #000;
+    transform: none;
+    box-shadow: none;
+}
+#view-stats-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
+}
+#view-stats-btn:active { transform: translateY(0); }
+
+#share-result-btn {
     background: #2ed573;
     color: #000;
     border: none;
@@ -563,15 +588,18 @@ input:focus {
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.2s;
+    transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
     letter-spacing: 0.5px;
     width: 100%;
+    margin-bottom: 10px;
 }
-#view-stats-btn:hover {
+#share-result-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
 }
-#view-stats-btn:active { transform: translateY(0); }
+#share-result-btn.copied {
+    background: #1abc9c;
+}
 
 /* ---------- Modales Estadísticas y Cómo jugar ---------- */
 #stats-overlay,

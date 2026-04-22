@@ -22,6 +22,7 @@ const i18n = {
         statMaxStreak: "Mejor racha",
         statAvg: "Media intentos",
         closeBtn: "Cerrar",
+        shareBtn: "Compartir resultado",
         levelUpTitle: "¡NUEVO NIVEL!",
         infoTitle: "Cómo jugar",
         tier0: "Sin racha",
@@ -55,6 +56,7 @@ const i18n = {
         statMaxStreak: "Best streak",
         statAvg: "Avg attempts",
         closeBtn: "Close",
+        shareBtn: "Share result",
         levelUpTitle: "NEW LEVEL!",
         infoTitle: "How to play",
         tier0: "No streak",
@@ -448,6 +450,7 @@ function recordGameResult(won, attempts, team) {
 let targetTeam;
 let attemptsCount = 0;
 let guessedTeams = [];
+let guessResults = [];  // 🆕 guardamos los resultados de cada intento
 let gameOver = false;
 let activeSuggestionIndex = -1;
 let currentSuggestions = [];
@@ -734,7 +737,8 @@ async function makeGuess(userTeam) {
         { key: 'capacity', val: userTeam.capacity, target: targetTeam.capacity, isNum: true, isCap: true }
     ];
 
-    for (const m of metrics) {
+    const rowStatuses = [];
+        for (const m of metrics) {
         const sq = document.createElement('div');
         let status = 'wrong';
         if (m.val === m.target) status = 'correct';
@@ -746,6 +750,7 @@ async function makeGuess(userTeam) {
             if (colorsShareBase(m.val, m.target)) status = 'partial';
         }
         sq.className = `square ${status}`;
+            rowStatuses.push(status);
 
         if (m.isNum) {
             const text = m.isCap ? Math.round(m.val / 1000) + "k" : m.val + (m.unit || "");
@@ -765,7 +770,7 @@ async function makeGuess(userTeam) {
         requestAnimationFrame(() => fitTextInSquare(sq));
         await new Promise(r => setTimeout(r, REVEAL_DELAY));
     }
-
+guessResults.push(rowStatuses);
 if (userTeam.name === targetTeam.name) {
         gameOver = true;
         input.disabled = true;
@@ -1050,5 +1055,64 @@ function launchFireworks() {
         });
     }, 350); // una ráfaga cada 350ms
 }
+
+// ---------- COMPARTIR RESULTADO ----------
+function buildShareText() {
+    const data = loadData();
+    const attempts = data.lastResult ? data.lastResult.attempts : attemptsCount;
+    const streak = data.stats.currentStreak;
+
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+
+    const emojiMap = {
+        'correct': '🟩',
+        'partial': '🟨',
+        'wrong':   '🟥'
+    };
+
+    const grid = guessResults.map(row =>
+        row.map(s => emojiMap[s] || '⬜').join('')
+    ).join('\n');
+
+    const txt = currentLang === 'es'
+        ? `⚽ Equipodle del ${dd}/${mm} ⚽\nAdivinado en ${attempts} intentos · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: equipodle-pro.vercel.app`
+        : `⚽ Equipodle ${dd}/${mm} ⚽\nGuessed in ${attempts} tries · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: equipodle-pro.vercel.app`;
+
+    return txt;
+}
+
+async function shareResult() {
+    const text = buildShareText();
+    const shareBtn = document.getElementById('share-result-btn');
+
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: 'Equipodle Pro',
+                text: text
+            });
+            return;
+        } catch (err) {
+            // usuario canceló, probamos portapapeles
+        }
+    }
+
+    try {
+        await navigator.clipboard.writeText(text);
+        const originalText = shareBtn.innerText;
+        shareBtn.innerText = currentLang === 'es' ? '¡Copiado! ✓' : 'Copied! ✓';
+        shareBtn.classList.add('copied');
+        setTimeout(() => {
+            shareBtn.innerText = originalText;
+            shareBtn.classList.remove('copied');
+        }, 2000);
+    } catch (err) {
+        alert(currentLang === 'es' ? 'No se pudo copiar :(' : "Couldn't copy :(");
+    }
+}
+
+document.getElementById('share-result-btn').addEventListener('click', shareResult);
 
 init();
