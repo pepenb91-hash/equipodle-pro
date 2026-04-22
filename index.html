@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Barra superior con info, stats, racha e idioma -->
+    <!-- Barra superior -->
     <div id="top-bar">
         <button id="info-btn" title="Cómo jugar">ℹ️</button>
         <button id="stats-btn" title="Estadísticas">📊</button>
@@ -28,7 +28,14 @@
         </div>
     </div>
 
-    <div id="game-container">
+    <!-- Selector de modo: Equipos / Leyendas -->
+    <div id="mode-switcher">
+        <button class="mode-btn active" data-mode="teams" data-i18n="modeTeams">Equipos</button>
+        <button class="mode-btn" data-mode="legends" data-i18n="modeLegends">Leyendas</button>
+    </div>
+
+    <!-- ========== MODO EQUIPOS ========== -->
+    <div id="game-container" class="mode-section">
         <h1>Equipodle <span style="font-size: 0.5em; color: #2ed573;">Pro</span></h1>
 
         <div id="attempts-counter">
@@ -57,7 +64,39 @@
         </div>
     </div>
 
-    <!-- Pantalla de victoria -->
+    <!-- ========== MODO LEYENDAS ========== -->
+    <div id="legends-container" class="mode-section hidden">
+        <h1 data-i18n="legendsTitle">Legendsdle</h1>
+
+        <div id="legends-attempts-counter">
+            <div class="attempts-title" data-i18n="legendsColLeft">Intentos restantes</div>
+            <div id="legends-attempts-number">5</div>
+        </div>
+
+        <!-- Foto con blur progresivo -->
+        <div id="legend-photo-wrapper">
+            <div id="legend-photo-placeholder">
+                <span id="legend-photo-initials">?</span>
+            </div>
+            <img id="legend-photo" alt="Leyenda del día">
+        </div>
+
+        <!-- Pista opcional (año de nacimiento) -->
+        <div id="legend-hint" class="hidden">
+            <span data-i18n="hintBornIn">Nacido en</span>
+            <span id="legend-hint-year">----</span>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="legend-input" placeholder="Escribe el nombre del jugador..." autocomplete="off">
+            <div id="legend-autocomplete-list" class="autocomplete-items"></div>
+        </div>
+
+        <!-- Lista de intentos fallidos -->
+        <div id="legend-guesses-container"></div>
+    </div>
+
+    <!-- Pantalla de victoria (se reusa para ambos modos) -->
     <div id="victory-overlay" class="hidden">
         <div id="victory-card">
             <div class="confetti-emoji">🏆</div>

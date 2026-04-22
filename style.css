@@ -18,7 +18,8 @@ body::before {
     background-color: rgba(0, 0, 0, 0.85);
     z-index: 1;
 }
-#game-container {
+
+.mode-section {
     position: relative;
     z-index: 2;
     width: 100%;
@@ -26,10 +27,11 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 80px;
+    margin-top: 70px;
     padding: 0 10px 60px;
     box-sizing: border-box;
 }
+.mode-section.hidden { display: none !important; }
 
 h1 {
     margin: 10px 0 20px;
@@ -92,6 +94,41 @@ h1 {
     background: rgba(46, 213, 115, 0.1);
 }
 
+/* ---------- Selector de Modo (Equipos / Leyendas) ---------- */
+#mode-switcher {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+    display: flex;
+    gap: 4px;
+    background: rgba(30, 30, 30, 0.85);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    width: auto;
+}
+.mode-btn {
+    background: transparent;
+    color: #aaa;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+.mode-btn:hover { color: #fff; }
+.mode-btn.active {
+    background: #2ed573;
+    color: #000;
+    box-shadow: 0 4px 12px rgba(46, 213, 115, 0.3);
+}
+
 /* ---------- Cápsula de Racha ---------- */
 #streak-capsule {
     display: flex;
@@ -152,7 +189,6 @@ h1 {
     font-variant-numeric: tabular-nums;
 }
 
-/* Tiers del balón */
 #streak-capsule.tier-1 #streak-ball { filter: none; }
 #streak-capsule.tier-2 #streak-ball { filter: none; }
 #streak-capsule.tier-2 #streak-aura {
@@ -240,7 +276,8 @@ h1 {
     50% { transform: translateY(-3px); }
 }
 
-#attempts-counter {
+#attempts-counter,
+#legends-attempts-counter {
     background-color: rgba(30, 30, 30, 0.8);
     padding: 12px 30px;
     border-radius: 15px;
@@ -249,7 +286,8 @@ h1 {
     text-align: center;
 }
 .attempts-title { font-size: 0.85rem; color: #aaa; letter-spacing: 1px; text-transform: uppercase; }
-#attempts-number { font-size: 2.2rem; font-weight: bold; color: #2ed573; margin: 4px 0; }
+#attempts-number,
+#legends-attempts-number { font-size: 2.2rem; font-weight: bold; color: #2ed573; margin: 4px 0; }
 #attempts-balls { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; max-width: 300px; }
 
 .search-box { position: relative; width: 100%; max-width: 500px; margin-bottom: 30px; }
@@ -444,6 +482,93 @@ input:focus {
     color: #222;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
 }
+
+/* ---------- MODO LEYENDAS - Foto con blur ---------- */
+#legend-photo-wrapper {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 3px solid #2ed573;
+    box-shadow: 0 10px 40px rgba(46, 213, 115, 0.3);
+    background: #1a1a1a;
+}
+
+#legend-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: filter 0.8s ease-out;
+    display: block;
+    background: #0d0d0d;
+}
+#legend-photo.blur-10 { filter: blur(35px); }
+#legend-photo.blur-9  { filter: blur(28px); }
+#legend-photo.blur-8  { filter: blur(22px); }
+#legend-photo.blur-7  { filter: blur(17px); }
+#legend-photo.blur-6  { filter: blur(13px); }
+#legend-photo.blur-5  { filter: blur(9px); }
+#legend-photo.blur-4  { filter: blur(6px); }
+#legend-photo.blur-3  { filter: blur(4px); }
+#legend-photo.blur-2  { filter: blur(2px); }
+#legend-photo.blur-1  { filter: blur(1px); }
+#legend-photo.blur-0  { filter: blur(0); }
+
+#legend-photo-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #2ed573, #1abc9c);
+    color: #000;
+    font-size: 4rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+#legend-photo-placeholder.hidden-placeholder { display: none; }
+
+#legend-hint {
+    background: rgba(46, 213, 115, 0.12);
+    border: 1px solid rgba(46, 213, 115, 0.4);
+    color: #2ed573;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    animation: fadeIn 0.4s ease-out;
+}
+#legend-hint-year {
+    font-size: 1.1rem;
+    margin-left: 6px;
+    color: #fff;
+}
+
+/* Lista de intentos fallidos en leyendas */
+#legend-guesses-container {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+.legend-guess-row {
+    background: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.4);
+    padding: 10px 16px;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: popIn 0.3s ease-out;
+}
 /* ---------- Pantalla de Victoria ---------- */
 #victory-overlay {
     position: fixed;
@@ -476,6 +601,11 @@ input:focus {
     animation: slideUp 0.5s ease-out;
     box-sizing: border-box;
 }
+#victory-card.defeat {
+    border-color: #e74c3c;
+    box-shadow: 0 20px 60px rgba(231, 76, 60, 0.3);
+}
+#victory-card.defeat h2 { color: #e74c3c; }
 .confetti-emoji {
     font-size: 3.5rem;
     margin-bottom: 8px;
@@ -554,31 +684,6 @@ input:focus {
     letter-spacing: 2px;
 }
 
-#view-stats-btn {
-    background: transparent;
-    color: #2ed573;
-    border: 2px solid #2ed573;
-    padding: 13px 32px;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.15s;
-    letter-spacing: 0.5px;
-    width: 100%;
-}
-#view-stats-btn:hover {
-    background: #2ed573;
-    color: #000;
-    transform: none;
-    box-shadow: none;
-}
-#view-stats-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
-}
-#view-stats-btn:active { transform: translateY(0); }
-
 #share-result-btn {
     background: #2ed573;
     color: #000;
@@ -599,6 +704,24 @@ input:focus {
 }
 #share-result-btn.copied {
     background: #1abc9c;
+}
+
+#view-stats-btn {
+    background: transparent;
+    color: #2ed573;
+    border: 2px solid #2ed573;
+    padding: 13px 32px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.5px;
+    width: 100%;
+}
+#view-stats-btn:hover {
+    background: #2ed573;
+    color: #000;
 }
 
 /* ---------- Modales Estadísticas y Cómo jugar ---------- */
@@ -637,6 +760,20 @@ input:focus {
     color: #2ed573;
     letter-spacing: 1px;
 }
+
+.stats-section-title {
+    color: #2ed573;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 14px 0 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(46, 213, 115, 0.3);
+    padding-bottom: 5px;
+    font-weight: 800;
+}
+.stats-section-title:first-child { margin-top: 0; }
+
 #stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -689,9 +826,7 @@ input:focus {
     line-height: 1.55;
     margin-bottom: 22px;
 }
-#info-content p {
-    margin: 0 0 14px;
-}
+#info-content p { margin: 0 0 14px; }
 #info-content h3 {
     color: #2ed573;
     font-size: 1rem;
@@ -847,8 +982,8 @@ input:focus {
         --grid-gap: 3px;
     }
 
-    #game-container {
-        margin-top: 65px;
+    .mode-section {
+        margin-top: 5px;
         padding: 0 2px 40px;
         max-width: 100%;
     }
@@ -877,11 +1012,23 @@ input:focus {
     #lang-switcher { padding: 3px; gap: 4px; }
     .lang-btn { font-size: 1.05rem; padding: 3px 6px; }
 
-    #attempts-counter {
+    #mode-switcher {
+        top: 10px;
+        left: 8px;
+        padding: 3px;
+    }
+    .mode-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    #attempts-counter,
+    #legends-attempts-counter {
         padding: 10px 25px;
         margin-bottom: 15px;
     }
-    #attempts-number { font-size: 1.8rem; }
+    #attempts-number,
+    #legends-attempts-number { font-size: 1.8rem; }
     .attempts-title { font-size: 0.7rem; }
 
     input {
@@ -897,7 +1044,6 @@ input:focus {
         margin-right: 8px;
     }
 
-    /* Fila de equipo: escudo pequeño, nombre truncado */
     .row-shield .shield-img,
     .row-shield .shield-fallback {
         width: 22px; height: 22px;
@@ -918,13 +1064,18 @@ input:focus {
         letter-spacing: -0.2px;
     }
 
-    /* Mini stats */
+    /* Leyendas - foto más pequeña */
+    #legend-photo-wrapper {
+        width: 240px;
+        height: 240px;
+    }
+    #legend-photo-placeholder { font-size: 3rem; }
+
     #mini-stats { gap: 6px; }
     .mini-stat { padding: 8px 3px; }
     .mini-stat-value { font-size: 1.15rem; }
     .mini-stat-label { font-size: 0.55rem; }
 
-    /* Victoria */
     #victory-card { padding: 22px 18px; }
     .confetti-emoji { font-size: 2.8rem; }
     #victory-card h2 { font-size: 1.7rem; }
@@ -932,9 +1083,9 @@ input:focus {
     #victory-team { padding: 10px 14px; }
     #victory-team-name { font-size: 1rem; }
     #countdown-timer { font-size: 1.3rem; }
-    #view-stats-btn { padding: 11px 25px; font-size: 0.95rem; }
+    #view-stats-btn,
+    #share-result-btn { padding: 11px 25px; font-size: 0.95rem; }
 
-    /* Stats modal */
     #stats-card,
     #info-card { padding: 22px 18px; }
     #stats-grid { gap: 6px; }
@@ -942,13 +1093,11 @@ input:focus {
     .stat-box-value { font-size: 1.5rem; }
     .stat-box-label { font-size: 0.55rem; }
 
-    /* Info modal */
     #info-content { font-size: 0.85rem; }
     #info-content h3 { font-size: 0.85rem; }
     .info-legend-swatch { width: 32px; height: 32px; font-size: 0.7rem; }
     .info-legend-text { font-size: 0.8rem; }
 
-    /* Level up */
     #levelup-card { padding: 25px 20px; }
     .levelup-title { font-size: 1.3rem; letter-spacing: 2px; }
     #levelup-ball-wrapper { width: 90px; height: 90px; }
@@ -957,7 +1106,6 @@ input:focus {
     #levelup-tier-name { font-size: 1.1rem; }
 }
 
-/* Pantallas MUY pequeñas (<= 380px) */
 @media (max-width: 380px) {
     :root {
         --square-size: 34px;
@@ -971,5 +1119,9 @@ input:focus {
     .row-shield .shield-fallback {
         width: 18px; height: 18px;
         margin-right: 3px;
+    }
+    #legend-photo-wrapper {
+        width: 200px;
+        height: 200px;
     }
 }
