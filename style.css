@@ -504,16 +504,16 @@ input:focus {
     display: block;
     background: #0d0d0d;
 }
-#legend-photo.blur-10 { filter: blur(35px); }
-#legend-photo.blur-9  { filter: blur(28px); }
-#legend-photo.blur-8  { filter: blur(22px); }
-#legend-photo.blur-7  { filter: blur(17px); }
-#legend-photo.blur-6  { filter: blur(13px); }
-#legend-photo.blur-5  { filter: blur(9px); }
-#legend-photo.blur-4  { filter: blur(6px); }
-#legend-photo.blur-3  { filter: blur(4px); }
-#legend-photo.blur-2  { filter: blur(2px); }
-#legend-photo.blur-1  { filter: blur(1px); }
+#legend-photo.blur-10 { filter: blur(40px); }
+#legend-photo.blur-9  { filter: blur(25px); }
+#legend-photo.blur-8  { filter: blur(16px); }
+#legend-photo.blur-7  { filter: blur(10px); }
+#legend-photo.blur-6  { filter: blur(7px); }
+#legend-photo.blur-5  { filter: blur(5px); }
+#legend-photo.blur-4  { filter: blur(3.5px); }
+#legend-photo.blur-3  { filter: blur(2px); }
+#legend-photo.blur-2  { filter: blur(1px); }
+#legend-photo.blur-1  { filter: blur(0.5px); }
 #legend-photo.blur-0  { filter: blur(0); }
 
 #legend-photo-placeholder {
