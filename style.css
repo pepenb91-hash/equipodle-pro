@@ -1154,3 +1154,65 @@ input:focus {
         height: 200px;
     }
 }
+/* ---------- Footer con botón Buy me a coffee ---------- */
+#page-footer {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px 15px 30px;
+    box-sizing: border-box;
+    margin-top: auto;
+}
+
+.coffee-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #ffdd00 0%, #ffa500 100%);
+    color: #000;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 16px rgba(255, 165, 0, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.coffee-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(255, 165, 0, 0.5);
+}
+
+.coffee-icon {
+    font-size: 1.2rem;
+    animation: coffeeSteam 2s ease-in-out infinite;
+}
+
+@keyframes coffeeSteam {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-2px) rotate(5deg); }
+}
+
+/* Asegurar que body/html son flex para que el footer se vaya al fondo */
+body {
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Responsive - más pequeño en móvil */
+@media (max-width: 700px) {
+    #page-footer {
+        padding: 15px 10px 20px;
+    }
+    .coffee-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+    .coffee-icon {
+        font-size: 1rem;
+    }
+}

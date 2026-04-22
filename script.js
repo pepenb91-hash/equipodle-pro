@@ -45,7 +45,8 @@ const i18n = {
         legendsDefeatText: "El jugador era:",
         legendsColLeft: "Intentos restantes",
         statsTeams: "Teams",
-        statsLegends: "Legends"
+        statsLegends: "Legends",
+        coffeeBtn: "Invítame a un café"
     },
     en: {
         attemptsTitle: "Number of attempts",
@@ -92,7 +93,8 @@ const i18n = {
         legendsDefeatText: "The player was:",
         legendsColLeft: "Attempts left",
         statsTeams: "Teams",
-        statsLegends: "Legends"
+        statsLegends: "Legends",
+        coffeeBtn: "Buy me a coffee"
     }
 };
 
