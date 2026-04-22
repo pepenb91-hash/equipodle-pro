@@ -38,6 +38,17 @@ h1 {
     text-align: center;
 }
 
+.mode-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+.mode-title span {
+    color: #2ed573;
+    font-size: 1em;
+    font-weight: bold;
+}
+
 /* ---------- Barra superior ---------- */
 #top-bar {
     position: fixed;
@@ -94,7 +105,7 @@ h1 {
     background: rgba(46, 213, 115, 0.1);
 }
 
-/* ---------- Selector de Modo (Equipos / Leyendas) ---------- */
+/* ---------- Selector de Modo (Teams / Legends) ---------- */
 #mode-switcher {
     position: fixed;
     top: 15px;
@@ -483,7 +494,7 @@ input:focus {
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-/* ---------- MODO LEYENDAS - Foto con blur ---------- */
+/* ---------- MODO LEGENDS - Foto con blur ---------- */
 #legend-photo-wrapper {
     position: relative;
     width: 280px;
@@ -548,7 +559,7 @@ input:focus {
     color: #fff;
 }
 
-/* Lista de intentos fallidos en leyendas */
+/* Lista de intentos fallidos en legends */
 #legend-guesses-container {
     width: 100%;
     max-width: 400px;
@@ -761,30 +772,39 @@ input:focus {
     letter-spacing: 1px;
 }
 
-.stats-section-title {
-    color: #2ed573;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 14px 0 10px;
-    text-align: left;
-    border-bottom: 1px solid rgba(46, 213, 115, 0.3);
-    padding-bottom: 5px;
-    font-weight: 800;
-}
-.stats-section-title:first-child { margin-top: 0; }
-
+/* ---------- ESTADÍSTICAS (grid arreglado) ---------- */
 #stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     margin-bottom: 22px;
 }
+
+/* Título de sección ocupa TODAS las columnas */
+.stats-section-title {
+    grid-column: 1 / -1;
+    color: #2ed573;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 10px 0 4px;
+    text-align: left;
+    padding: 8px 4px;
+    border-bottom: 2px solid rgba(46, 213, 115, 0.3);
+    font-weight: 800;
+}
+.stats-section-title:first-child { margin-top: 0; }
+
 .stat-box {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid #333;
     border-radius: 12px;
     padding: 14px 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 75px;
 }
 .stat-box-value {
     font-size: 1.8rem;
@@ -798,6 +818,7 @@ input:focus {
     text-transform: uppercase;
     margin-top: 6px;
     letter-spacing: 0.5px;
+    text-align: center;
 }
 #close-stats-btn,
 #close-info-btn {
@@ -989,8 +1010,8 @@ input:focus {
     }
 
     h1 { font-size: 1.6rem; margin: 5px 0 12px; }
+    .mode-title { font-size: 1.6rem; }
 
-    /* Barra superior de DERECHA (idioma + info + stats + racha) */
     #top-bar {
         top: 10px;
         right: 8px;
@@ -998,7 +1019,7 @@ input:focus {
         gap: 6px;
         justify-content: flex-end;
         flex-wrap: wrap;
-        max-width: calc(100% - 170px); /* deja espacio al selector de modo */
+        max-width: calc(100% - 170px);
     }
 
     #info-btn, #stats-btn {
@@ -1015,7 +1036,6 @@ input:focus {
     #lang-switcher { padding: 3px; gap: 4px; }
     .lang-btn { font-size: 1.05rem; padding: 3px 6px; }
 
-    /* Selector de modo a la IZQUIERDA, no se toca con nada */
     #mode-switcher {
         top: 10px;
         left: 8px;
@@ -1069,7 +1089,6 @@ input:focus {
         letter-spacing: -0.2px;
     }
 
-    /* Leyendas - foto más pequeña */
     #legend-photo-wrapper {
         width: 240px;
         height: 240px;
@@ -1094,9 +1113,14 @@ input:focus {
     #stats-card,
     #info-card { padding: 22px 18px; }
     #stats-grid { gap: 6px; }
-    .stat-box { padding: 10px 4px; }
+    .stat-box { padding: 10px 4px; min-height: 65px; }
     .stat-box-value { font-size: 1.5rem; }
     .stat-box-label { font-size: 0.55rem; }
+    .stats-section-title {
+        font-size: 0.8rem;
+        margin: 8px 0 2px;
+        padding: 6px 4px;
+    }
 
     #info-content { font-size: 0.85rem; }
     #info-content h3 { font-size: 0.85rem; }

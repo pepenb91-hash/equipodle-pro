@@ -33,9 +33,9 @@ const i18n = {
         tier5: "Eléctrico",
         tier6: "Diamante",
         tier7: "Leyenda",
-        modeTeams: "Equipos",
-        modeLegends: "Leyendas",
-        legendsTitle: "Legendsdle",
+        modeTeams: "Teams",
+        modeLegends: "Legends",
+        legendsTitle: "Rondo · Legends",
         legendsPlaceholder: "Escribe el nombre del jugador...",
         legendsAttemptsLabel: "Intentos",
         legendsOf: "de",
@@ -44,8 +44,8 @@ const i18n = {
         legendsDefeatTitle: "¡Qué pena!",
         legendsDefeatText: "El jugador era:",
         legendsColLeft: "Intentos restantes",
-        statsTeams: "Modo Equipos",
-        statsLegends: "Modo Leyendas"
+        statsTeams: "Teams",
+        statsLegends: "Legends"
     },
     en: {
         attemptsTitle: "Number of attempts",
@@ -82,7 +82,7 @@ const i18n = {
         tier7: "Legend",
         modeTeams: "Teams",
         modeLegends: "Legends",
-        legendsTitle: "Legendsdle",
+        legendsTitle: "Rondo · Legends",
         legendsPlaceholder: "Type the player's name...",
         legendsAttemptsLabel: "Attempts",
         legendsOf: "of",
@@ -91,8 +91,8 @@ const i18n = {
         legendsDefeatTitle: "So close!",
         legendsDefeatText: "The player was:",
         legendsColLeft: "Attempts left",
-        statsTeams: "Teams mode",
-        statsLegends: "Legends mode"
+        statsTeams: "Teams",
+        statsLegends: "Legends"
     }
 };
 
@@ -154,8 +154,8 @@ function translateColor(color) {
 // ---------- Contenido "Cómo jugar" ----------
 const howToPlayContent = {
     es: `
-        <p>Hay dos modos: <strong>Equipos</strong> (adivina un equipo por sus pistas) y <strong>Leyendas</strong> (adivina un jugador por su foto borrosa).</p>
-        <h3>Modo Equipos</h3>
+        <p>Hay dos modos: <strong>Teams</strong> (adivina un equipo por sus pistas) y <strong>Legends</strong> (adivina un jugador por su foto borrosa).</p>
+        <h3>Modo Teams</h3>
         <p>Cada día hay un <strong>equipo secreto</strong> de las 5 grandes ligas europeas. Escribe el nombre de cualquier equipo y aparecerán 7 pistas: <strong>Liga, Títulos, Color, Valor, Años en 1ª, Marca y Estadio</strong>.</p>
         <div class="info-legend">
             <div class="info-legend-swatch correct">✓</div>
@@ -169,12 +169,12 @@ const howToPlayContent = {
             <div class="info-legend-swatch wrong">✗</div>
             <div class="info-legend-text"><strong>Rojo:</strong> no coincide.</div>
         </div>
-        <h3>Modo Leyendas</h3>
+        <h3>Modo Legends</h3>
         <p>Una foto borrosa de un jugador legendario. Tienes <strong>10 intentos</strong>. Con cada fallo, la foto se ve un poco más nítida. Tras 5 fallos verás también el año de nacimiento como pista extra.</p>
         <h3>Modo diario</h3>
         <p>Solo puedes jugar <strong>una partida al día de cada modo</strong>. Ambos cambian a medianoche (hora local).</p>
         <h3>Racha</h3>
-        <p>La racha de equipos y la de leyendas son <strong>independientes</strong>. Cada día que aciertas en el modo Equipos, tu balón evoluciona (3, 5, 10, 20, 50, 100, 200 victorias).</p>
+        <p>La racha de Teams y Legends son <strong>independientes</strong>. Cada día que aciertas en Teams, tu balón evoluciona (3, 5, 10, 20, 50, 100, 200 victorias).</p>
     `,
     en: `
         <p>There are two modes: <strong>Teams</strong> (guess a team by clues) and <strong>Legends</strong> (guess a player from a blurred photo).</p>
@@ -197,7 +197,7 @@ const howToPlayContent = {
         <h3>Daily mode</h3>
         <p>Only <strong>one game per day of each mode</strong>. Both change at midnight (local time).</p>
         <h3>Streak</h3>
-        <p>Teams and legends streaks are <strong>independent</strong>. Each day you win in Teams mode, your ball evolves (3, 5, 10, 20, 50, 100, 200 wins).</p>
+        <p>Teams and Legends streaks are <strong>independent</strong>. Each day you win in Teams mode, your ball evolves (3, 5, 10, 20, 50, 100, 200 wins).</p>
     `
 };
 
@@ -230,7 +230,6 @@ const ARROW_SVG_DOWN = `
   <path d="M50 12 L86 54 L66 54 L66 88 L34 88 L34 54 L14 54 Z"
         fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
 </svg>`;
-
 // ---------- EQUIPOS ----------
 const teams = [
     // ESPAÑA
@@ -596,14 +595,12 @@ function updateStreakCapsule() {
 // ==========================================================
 
 function getShieldUrlList(team) {
-    // Si el equipo tiene logoUrl directa, la usamos primero
     if (team.logoUrl) {
         return [
             team.logoUrl,
             `https://cdn.jsdelivr.net/gh/luukhopman/football-logos@master/logos/${team.name}.png`
         ];
     }
-    // Si no, la cascada normal basada en wikiFile
     const wiki = encodeURIComponent(team.wikiFile);
     return [
         `https://en.wikipedia.org/wiki/Special:FilePath/${wiki}?width=150`,
@@ -741,7 +738,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 });
 
 // ==========================================================
-// ==========  MODO EQUIPOS =================================
+// ==========  MODO TEAMS ===================================
 // ==========================================================
 
 input.addEventListener('input', () => { if (!gameOver) renderSuggestions(); });
@@ -899,7 +896,7 @@ async function makeGuess(userTeam) {
 }
 
 // ==========================================================
-// ==========  MODO LEYENDAS ================================
+// ==========  MODO LEGENDS =================================
 // ==========================================================
 
 legendInput.addEventListener('input', () => { if (!legendGameOver) renderLegendSuggestions(); });
@@ -1293,7 +1290,7 @@ infoOverlay.addEventListener('click', (e) => {
 });
 
 // ==========================================================
-// ==========  COMPARTIR RESULTADO ==========================
+// ==========  COMPARTIR RESULTADO (con Rondo + playrondo.app)
 // ==========================================================
 
 function buildShareText() {
@@ -1316,8 +1313,8 @@ function buildShareText() {
         const attemptsWordEn = attempts === 1 ? 'try' : 'tries';
 
         txt = currentLang === 'es'
-            ? `⚽ Equipodle del ${dd}/${mm} ⚽\nAdivinado en ${attempts} ${attemptsWordEs} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: equipodle-pro.vercel.app`
-            : `⚽ Equipodle ${dd}/${mm} ⚽\nGuessed in ${attempts} ${attemptsWordEn} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: equipodle-pro.vercel.app`;
+            ? `⚽ Rondo · Teams — ${dd}/${mm} ⚽\nAdivinado en ${attempts} ${attemptsWordEs} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: playrondo.app`
+            : `⚽ Rondo · Teams — ${dd}/${mm} ⚽\nGuessed in ${attempts} ${attemptsWordEn} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: playrondo.app`;
     } else {
         let grid = '';
         for (let i = 0; i < LEGEND_MAX_ATTEMPTS; i++) {
@@ -1327,8 +1324,8 @@ function buildShareText() {
             else grid += '⬜';
         }
         txt = currentLang === 'es'
-            ? `⭐ Legendsdle del ${dd}/${mm} ⭐\n${won ? 'Adivinado' : 'Fallido'} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: equipodle-pro.vercel.app`
-            : `⭐ Legendsdle ${dd}/${mm} ⭐\n${won ? 'Guessed' : 'Failed'} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: equipodle-pro.vercel.app`;
+            ? `⭐ Rondo · Legends — ${dd}/${mm} ⭐\n${won ? 'Adivinado' : 'Fallido'} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: playrondo.app`
+            : `⭐ Rondo · Legends — ${dd}/${mm} ⭐\n${won ? 'Guessed' : 'Failed'} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: playrondo.app`;
     }
 
     return txt;
@@ -1340,7 +1337,7 @@ async function shareResult() {
 
     if (navigator.share) {
         try {
-            await navigator.share({ title: 'Equipodle Pro', text: text });
+            await navigator.share({ title: 'Rondo', text: text });
             return;
         } catch (err) {
             // usuario canceló

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipodle Pro - Las 5 Grandes Ligas</title>
+    <title>Rondo — The daily football guessing game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -28,15 +28,15 @@
         </div>
     </div>
 
-    <!-- Selector de modo: Equipos / Leyendas -->
+    <!-- Selector de modo: Teams / Legends -->
     <div id="mode-switcher">
-        <button class="mode-btn active" data-mode="teams" data-i18n="modeTeams">Equipos</button>
-        <button class="mode-btn" data-mode="legends" data-i18n="modeLegends">Leyendas</button>
+        <button class="mode-btn active" data-mode="teams" data-i18n="modeTeams">Teams</button>
+        <button class="mode-btn" data-mode="legends" data-i18n="modeLegends">Legends</button>
     </div>
 
-    <!-- ========== MODO EQUIPOS ========== -->
+    <!-- ========== MODO TEAMS ========== -->
     <div id="game-container" class="mode-section">
-        <h1>Equipodle <span style="font-size: 0.5em; color: #2ed573;">Pro</span></h1>
+        <h1 class="mode-title">Rondo <span>· Teams</span></h1>
 
         <div id="attempts-counter">
             <div class="attempts-title" data-i18n="attemptsTitle">Número de intentos</div>
@@ -64,9 +64,9 @@
         </div>
     </div>
 
-    <!-- ========== MODO LEYENDAS ========== -->
+    <!-- ========== MODO LEGENDS ========== -->
     <div id="legends-container" class="mode-section hidden">
-        <h1 data-i18n="legendsTitle">Legendsdle</h1>
+        <h1 class="mode-title">Rondo <span>· Legends</span></h1>
 
         <div id="legends-attempts-counter">
             <div class="attempts-title" data-i18n="legendsColLeft">Intentos restantes</div>
