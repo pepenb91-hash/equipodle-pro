@@ -1076,9 +1076,12 @@ function buildShareText() {
         row.map(s => emojiMap[s] || '⬜').join('')
     ).join('\n');
 
+    const attemptsWordEs = attempts === 1 ? 'intento' : 'intentos';
+    const attemptsWordEn = attempts === 1 ? 'try' : 'tries';
+
     const txt = currentLang === 'es'
-        ? `⚽ Equipodle del ${dd}/${mm} ⚽\nAdivinado en ${attempts} intentos · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: equipodle-pro.vercel.app`
-        : `⚽ Equipodle ${dd}/${mm} ⚽\nGuessed in ${attempts} tries · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: equipodle-pro.vercel.app`;
+        ? `⚽ Equipodle del ${dd}/${mm} ⚽\nAdivinado en ${attempts} ${attemptsWordEs} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: equipodle-pro.vercel.app`
+        : `⚽ Equipodle ${dd}/${mm} ⚽\nGuessed in ${attempts} ${attemptsWordEn} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: equipodle-pro.vercel.app`;
 
     return txt;
 }
