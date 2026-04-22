@@ -46,7 +46,8 @@ const i18n = {
         legendsColLeft: "Intentos restantes",
         statsTeams: "Teams",
         statsLegends: "Legends",
-        coffeeBtn: "Invítame a un café"
+        coffeeBtn: "Invítame a un café",
+        diceText: "¿No sabes por dónde empezar? ¡Tira el dado!"
     },
     en: {
         attemptsTitle: "Number of attempts",
@@ -94,7 +95,8 @@ const i18n = {
         legendsColLeft: "Attempts left",
         statsTeams: "Teams",
         statsLegends: "Legends",
-        coffeeBtn: "Buy me a coffee"
+        coffeeBtn: "Buy me a coffee",
+        diceText: "Don't know where to start? Roll the dice!"
     }
 };
 
@@ -138,7 +140,7 @@ const colorShort = {
     "Azulnegro":    { es: "A-Negr",  en: "B-Blk" }
 };
 
-let currentLang = 'es';
+let currentLang = 'en';
 
 function isMobile() {
     return window.innerWidth <= 700;
@@ -1404,7 +1406,7 @@ function init() {
     updateLegendBlur();
     updateLegendAttemptsUI();
 
-    applyLanguage('es');
+    applyLanguage('en');
 
     const data = loadData();
     updateStreakCapsule();
@@ -1430,5 +1432,41 @@ function init() {
         legendPhoto.classList.add('blur-0');
     }
 }
+
+// ==========================================================
+// ==========  DADO SUGIERE PRIMER EQUIPO ===================
+// ==========================================================
+
+const diceSuggest = document.getElementById('dice-suggest');
+
+function hideDice() {
+    if (diceSuggest) diceSuggest.classList.add('hidden-dice');
+}
+
+if (diceSuggest) {
+    // Al pulsar el dado: elegir equipo aleatorio y hacer guess
+    diceSuggest.addEventListener('click', () => {
+        if (gameOver) return;
+        const available = teams.filter(t => !guessedTeams.includes(t.name));
+        if (available.length === 0) return;
+        const randomTeam = available[Math.floor(Math.random() * available.length)];
+        hideDice();
+        makeGuess(randomTeam);
+    });
+
+    // Si el usuario empieza a escribir, ocultar el dado
+    input.addEventListener('input', () => {
+        if (input.value.length > 0) hideDice();
+    });
+}
+
+// Si el usuario ya jugó hoy, esconder el dado al arrancar
+function checkHideDiceOnLoad() {
+    const data = loadData();
+    if (data.teams.lastPlayed === getTodayKey() && data.teams.lastResult) {
+        hideDice();
+    }
+}
+checkHideDiceOnLoad();
 
 init();

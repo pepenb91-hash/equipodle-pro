@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +9,11 @@
 <body>
     <!-- Barra superior -->
     <div id="top-bar">
-        <button id="info-btn" title="Cómo jugar">ℹ️</button>
-        <button id="stats-btn" title="Estadísticas">📊</button>
+        <button id="info-btn" title="How to play">ℹ️</button>
+        <button id="stats-btn" title="Statistics">📊</button>
 
         <!-- Cápsula de racha -->
-        <div id="streak-capsule" title="Racha de victorias">
+        <div id="streak-capsule" title="Win streak">
             <div id="streak-ball-wrapper">
                 <div id="streak-aura"></div>
                 <span id="streak-ball">🏐</span>
@@ -23,8 +23,8 @@
         </div>
 
         <div id="lang-switcher">
-            <button class="lang-btn active" data-lang="es" title="Español">🇪🇸</button>
-            <button class="lang-btn" data-lang="en" title="English">🇬🇧</button>
+            <button class="lang-btn" data-lang="es" title="Español">🇪🇸</button>
+            <button class="lang-btn active" data-lang="en" title="English">🇬🇧</button>
         </div>
     </div>
 
@@ -39,26 +39,32 @@
         <h1 class="mode-title">Rondo <span>· Teams</span></h1>
 
         <div id="attempts-counter">
-            <div class="attempts-title" data-i18n="attemptsTitle">Número de intentos</div>
+            <div class="attempts-title" data-i18n="attemptsTitle">Number of attempts</div>
             <div id="attempts-number">0</div>
             <div id="attempts-balls"></div>
         </div>
 
         <div class="search-box">
-            <input type="text" id="team-input" placeholder="Escribe el nombre de un equipo..." autocomplete="off">
+            <input type="text" id="team-input" placeholder="Type a team name..." autocomplete="off">
             <div id="autocomplete-list" class="autocomplete-items"></div>
+        </div>
+
+        <!-- Dado para sugerir primer equipo -->
+        <div id="dice-suggest" class="dice-suggest">
+            <span class="dice-icon">🎲</span>
+            <span class="dice-text" data-i18n="diceText">Don't know where to start? Roll the dice!</span>
         </div>
 
         <div id="results-table">
             <div class="header-row hidden" id="header-row">
                 <div class="team-info-placeholder"></div>
-                <div class="cell-head" data-i18n="colLeague">Liga</div>
-                <div class="cell-head" data-i18n="colTitles">Títulos</div>
+                <div class="cell-head" data-i18n="colLeague">League</div>
+                <div class="cell-head" data-i18n="colTitles">Titles</div>
                 <div class="cell-head" data-i18n="colColor">Color</div>
-                <div class="cell-head" data-i18n="colBudget">Valor</div>
-                <div class="cell-head" data-i18n="colYears">Años en 1ª</div>
-                <div class="cell-head" data-i18n="colBrand">Marca</div>
-                <div class="cell-head" data-i18n="colStadium">Estadio</div>
+                <div class="cell-head" data-i18n="colBudget">Squad €</div>
+                <div class="cell-head" data-i18n="colYears">Years in Top</div>
+                <div class="cell-head" data-i18n="colBrand">Brand</div>
+                <div class="cell-head" data-i18n="colStadium">Stadium</div>
             </div>
             <div id="guesses-container"></div>
         </div>
@@ -69,8 +75,8 @@
         <h1 class="mode-title">Rondo <span>· Legends</span></h1>
 
         <div id="legends-attempts-counter">
-            <div class="attempts-title" data-i18n="legendsColLeft">Intentos restantes</div>
-            <div id="legends-attempts-number">5</div>
+            <div class="attempts-title" data-i18n="legendsColLeft">Attempts left</div>
+            <div id="legends-attempts-number">10</div>
         </div>
 
         <!-- Foto con blur progresivo -->
@@ -78,17 +84,17 @@
             <div id="legend-photo-placeholder">
                 <span id="legend-photo-initials">?</span>
             </div>
-            <img id="legend-photo" alt="Leyenda del día">
+            <img id="legend-photo" alt="Daily legend">
         </div>
 
         <!-- Pista opcional (año de nacimiento) -->
         <div id="legend-hint" class="hidden">
-            <span data-i18n="hintBornIn">Nacido en</span>
+            <span data-i18n="hintBornIn">Born in</span>
             <span id="legend-hint-year">----</span>
         </div>
 
         <div class="search-box">
-            <input type="text" id="legend-input" placeholder="Escribe el nombre del jugador..." autocomplete="off">
+            <input type="text" id="legend-input" placeholder="Type the player's name..." autocomplete="off">
             <div id="legend-autocomplete-list" class="autocomplete-items"></div>
         </div>
 
@@ -100,11 +106,11 @@
     <div id="victory-overlay" class="hidden">
         <div id="victory-card">
             <div class="confetti-emoji">🏆</div>
-            <h2 id="victory-heading" data-i18n="victoryTitle">¡Victoria!</h2>
+            <h2 id="victory-heading" data-i18n="victoryTitle">Victory!</h2>
             <p id="victory-message">
-                <span data-i18n="victoryTextBefore">Has adivinado el equipo en</span>
+                <span data-i18n="victoryTextBefore">You guessed the team in</span>
                 <span id="victory-attempts">0</span>
-                <span data-i18n="victoryTextAfter">intentos</span>
+                <span data-i18n="victoryTextAfter">attempts</span>
             </p>
             <div id="victory-team">
                 <img id="victory-team-logo" src="" alt="">
@@ -112,58 +118,54 @@
             </div>
             <div id="mini-stats"></div>
             <div id="countdown-box">
-                <div class="countdown-label" data-i18n="nextGameIn">Próximo equipo en</div>
+                <div class="countdown-label" data-i18n="nextGameIn">Next team in</div>
                 <div id="countdown-timer">--:--:--</div>
             </div>
-            <button id="share-result-btn" data-i18n="shareBtn">Compartir resultado</button>
-            <button id="view-stats-btn" data-i18n="statsTitle">Estadísticas</button>
+            <button id="share-result-btn" data-i18n="shareBtn">Share result</button>
+            <button id="view-stats-btn" data-i18n="statsTitle">Statistics</button>
         </div>
     </div>
 
     <!-- Modal de estadísticas -->
     <div id="stats-overlay" class="hidden">
         <div id="stats-card">
-            <h2 data-i18n="statsTitle">Estadísticas</h2>
+            <h2 data-i18n="statsTitle">Statistics</h2>
             <div id="stats-grid"></div>
-            <button id="close-stats-btn" data-i18n="closeBtn">Cerrar</button>
+            <button id="close-stats-btn" data-i18n="closeBtn">Close</button>
         </div>
     </div>
 
     <!-- Modal de "Nuevo nivel" -->
     <div id="levelup-overlay" class="hidden">
         <div id="levelup-card">
-            <div class="levelup-title" data-i18n="levelUpTitle">¡NUEVO NIVEL!</div>
+            <div class="levelup-title" data-i18n="levelUpTitle">NEW LEVEL!</div>
             <div id="levelup-ball-wrapper">
                 <div id="levelup-aura"></div>
                 <span id="levelup-ball">⚽</span>
                 <span id="levelup-extra"></span>
             </div>
             <div id="levelup-tier-name">Tier</div>
-            <div id="levelup-streak-number">Racha: 0</div>
-            <button id="levelup-close-btn" data-i18n="closeBtn">Cerrar</button>
+            <div id="levelup-streak-number">Streak: 0</div>
+            <button id="levelup-close-btn" data-i18n="closeBtn">Close</button>
         </div>
     </div>
 
     <!-- Modal "Cómo jugar" -->
     <div id="info-overlay" class="hidden">
         <div id="info-card">
-            <h2 data-i18n="infoTitle">Cómo jugar</h2>
+            <h2 data-i18n="infoTitle">How to play</h2>
             <div id="info-content"></div>
-            <button id="close-info-btn" data-i18n="closeBtn">Cerrar</button>
+            <button id="close-info-btn" data-i18n="closeBtn">Close</button>
         </div>
     </div>
 
-<!-- Footer con botón Buy me a coffee -->
+    <!-- Footer con botón Buy me a coffee -->
     <footer id="page-footer">
         <a href="https://buymeacoffee.com/playrondo" target="_blank" rel="noopener" class="coffee-btn" title="Support Rondo">
             <span class="coffee-icon">☕</span>
             <span class="coffee-text" data-i18n="coffeeBtn">Buy me a coffee</span>
         </a>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-    <script src="script.js"></script>
-</body>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
