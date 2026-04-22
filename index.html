@@ -150,6 +150,15 @@
         </div>
     </div>
 
+    <!-- Modal About & Credits -->
+    <div id="about-overlay" class="hidden">
+        <div id="about-card">
+            <h2 data-i18n="aboutTitle">About Rondo</h2>
+            <div id="about-content"></div>
+            <button id="close-about-btn" data-i18n="closeBtn">Close</button>
+        </div>
+    </div>
+    
     <!-- Modal "Cómo jugar" -->
     <div id="info-overlay" class="hidden">
         <div id="info-card">
@@ -159,12 +168,13 @@
         </div>
     </div>
 
-    <!-- Footer con botón Buy me a coffee -->
+    <!-- Footer con botón Buy me a coffee + link About -->
     <footer id="page-footer">
         <a href="https://buymeacoffee.com/playrondo" target="_blank" rel="noopener" class="coffee-btn" title="Support Rondo">
             <span class="coffee-icon">☕</span>
             <span class="coffee-text" data-i18n="coffeeBtn">Buy me a coffee</span>
         </a>
+        <button id="about-btn" class="footer-link" data-i18n="aboutBtn">About & Credits</button>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>

@@ -47,7 +47,9 @@ const i18n = {
         statsTeams: "Teams",
         statsLegends: "Legends",
         coffeeBtn: "Invítame a un café",
-        diceText: "¿No sabes por dónde empezar? ¡Tira el dado!"
+        diceText: "¿No sabes por dónde empezar? ¡Tira el dado!",
+        aboutBtn: "Acerca de",
+        aboutTitle: "Acerca de Rondo"
     },
     en: {
         attemptsTitle: "Number of attempts",
@@ -96,7 +98,9 @@ const i18n = {
         statsTeams: "Teams",
         statsLegends: "Legends",
         coffeeBtn: "Buy me a coffee",
-        diceText: "Don't know where to start? Roll the dice!"
+        diceText: "Don't know where to start? Roll the dice!",
+        aboutBtn: "About",
+        aboutTitle: "About Rondo"
     }
 };
 
@@ -179,7 +183,8 @@ const howToPlayContent = {
         <p>Solo puedes jugar <strong>una partida al día de cada modo</strong>. Ambos cambian a medianoche (hora local).</p>
         <h3>Racha</h3>
         <p>La racha de Teams y Legends son <strong>independientes</strong>. Cada día que aciertas en Teams, tu balón evoluciona (3, 5, 10, 20, 50, 100, 200 victorias).</p>
-    `,
+        <p style="font-size: 0.8rem; color: #888; margin-top: 20px; font-style: italic; border-top: 1px solid #333; padding-top: 12px;">Rondo es un proyecto fan no oficial. Todos los escudos y fotos son propiedad de sus respectivos dueños.</p>
+        `,
     en: `
         <p>There are two modes: <strong>Teams</strong> (guess a team by clues) and <strong>Legends</strong> (guess a player from a blurred photo).</p>
         <h3>Teams mode</h3>
@@ -202,6 +207,45 @@ const howToPlayContent = {
         <p>Only <strong>one game per day of each mode</strong>. Both change at midnight (local time).</p>
         <h3>Streak</h3>
         <p>Teams and Legends streaks are <strong>independent</strong>. Each day you win in Teams mode, your ball evolves (3, 5, 10, 20, 50, 100, 200 wins).</p>
+        <p style="font-size: 0.8rem; color: #888; margin-top: 20px; font-style: italic; border-top: 1px solid #333; padding-top: 12px;">Rondo is an unofficial fan project. All crests and photos belong to their respective owners.</p>
+    `
+};
+
+// ---------- Contenido "About & Credits" ----------
+const aboutContent = {
+    es: `
+        <p>Rondo es un juego diario de adivinanzas de fútbol creado por un fan, para fans. Una partida al día. Sin anuncios. Sin trampas.</p>
+        
+        <h3>El creador</h3>
+        <p>Hecho con mucho amor y demasiado café por <strong>Jose Navarro</strong>. Si te gusta el juego, considera <a href="https://buymeacoffee.com/playrondo" target="_blank" rel="noopener">invitarme a un café ☕</a>.</p>
+
+        <h3>Créditos de imágenes</h3>
+        <p>Las fotos de jugadores legendarios provienen de <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>, mayoritariamente bajo licencias Creative Commons (CC BY, CC BY-SA). Los créditos individuales de cada fotógrafo están disponibles en la página original de Wikipedia de cada jugador.</p>
+        <p>Los escudos de los equipos provienen de Wikipedia y otras fuentes públicas. Cada escudo es propiedad de su club correspondiente.</p>
+
+        <h3>Datos</h3>
+        <p>Los datos de los equipos (títulos, valor del plantel, capacidad del estadio, etc.) se han recopilado de fuentes públicas como Wikipedia y Transfermarkt. Pueden contener inexactitudes; si encuentras algún error, ¡avísame!</p>
+
+        <div class="disclaimer">
+            <strong>Aviso legal:</strong> Rondo es un proyecto fan no oficial. No está afiliado, asociado, autorizado, ni respaldado por LaLiga, Premier League, Serie A, Bundesliga, Ligue 1, FIFA, UEFA, ni ningún club o federación. Todos los nombres, marcas, escudos y fotografías son propiedad de sus respectivos dueños.
+        </div>
+    `,
+    en: `
+        <p>Rondo is a daily football guessing game made by a fan, for fans. One game a day. No ads. No tricks.</p>
+        
+        <h3>The creator</h3>
+        <p>Built with a lot of love and way too much coffee by <strong>Jose Navarro</strong>. If you enjoy the game, consider <a href="https://buymeacoffee.com/playrondo" target="_blank" rel="noopener">buying me a coffee ☕</a>.</p>
+
+        <h3>Image credits</h3>
+        <p>Photos of legendary players come from <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>, mostly under Creative Commons licenses (CC BY, CC BY-SA). Individual photographer credits are available on each player's original Wikipedia page.</p>
+        <p>Club crests come from Wikipedia and other public sources. Each crest is the property of its respective club.</p>
+
+        <h3>Data</h3>
+        <p>Team data (titles, squad value, stadium capacity, etc.) has been gathered from public sources like Wikipedia and Transfermarkt. It may contain inaccuracies; if you find any errors, please let me know!</p>
+
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> Rondo is an unofficial fan project. It is not affiliated with, associated with, authorized by, or endorsed by LaLiga, Premier League, Serie A, Bundesliga, Ligue 1, FIFA, UEFA, or any club or federation. All names, trademarks, crests, and photographs are property of their respective owners.
+        </div>
     `
 };
 
@@ -718,6 +762,9 @@ function applyLanguage(lang) {
     }
     if (!infoOverlay.classList.contains('hidden')) {
         infoContent.innerHTML = howToPlayContent[lang];
+    }
+    if (!aboutOverlay.classList.contains('hidden')) {
+        aboutContentEl.innerHTML = aboutContent[lang];
     }
 }
 
@@ -1468,5 +1515,31 @@ function checkHideDiceOnLoad() {
     }
 }
 checkHideDiceOnLoad();
+
+// ==========================================================
+// ==========  MODAL ABOUT & CREDITS ========================
+// ==========================================================
+
+const aboutBtn = document.getElementById('about-btn');
+const aboutOverlay = document.getElementById('about-overlay');
+const aboutContentEl = document.getElementById('about-content');
+const closeAboutBtn = document.getElementById('close-about-btn');
+
+if (aboutBtn) {
+    aboutBtn.addEventListener('click', () => {
+        aboutContentEl.innerHTML = aboutContent[currentLang];
+        aboutOverlay.classList.remove('hidden');
+    });
+}
+if (closeAboutBtn) {
+    closeAboutBtn.addEventListener('click', () => {
+        aboutOverlay.classList.add('hidden');
+    });
+}
+if (aboutOverlay) {
+    aboutOverlay.addEventListener('click', (e) => {
+        if (e.target === aboutOverlay) aboutOverlay.classList.add('hidden');
+    });
+}
 
 init();
