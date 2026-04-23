@@ -708,13 +708,30 @@ function updateAttemptsUI() {
     }
 }
 
+// Mapa explícito: cada color del juego -> sus colores base
+// Resuelve compuestos como "Blanquinegro" (blanco+negro), "Rojiblanco" (rojo+blanco), etc.
+const COLOR_BASES = {
+    'rojo':         ['rojo'],
+    'blanco':       ['blanco'],
+    'azul':         ['azul'],
+    'negro':        ['negro'],
+    'amarillo':     ['amarillo'],
+    'verde':        ['verde'],
+    'violeta':      ['violeta'],
+    'celeste':      ['celeste'],
+    'naranja':      ['naranja'],
+    'granate':      ['granate'],
+    'rojiblanco':   ['rojo', 'blanco'],
+    'rojinegro':    ['rojo', 'negro'],
+    'blanquiazul':  ['blanco', 'azul'],
+    'blanquinegro': ['blanco', 'negro'],
+    'verdiblanco':  ['verde', 'blanco'],
+    'azulgrana':    ['azul', 'granate'],
+    'azulnegro':    ['azul', 'negro']
+};
+
 function splitColor(color) {
-    const c = color.toLowerCase();
-    const map = ['rojo', 'blanco', 'azul', 'negro', 'amarillo', 'verde',
-                 'violeta', 'celeste', 'naranja', 'granate', 'grana'];
-    const found = [];
-    for (const base of map) if (c.includes(base)) found.push(base);
-    return found;
+    return COLOR_BASES[color.toLowerCase()] || [];
 }
 
 function colorsShareBase(a, b) {
