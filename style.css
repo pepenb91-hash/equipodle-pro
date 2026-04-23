@@ -601,6 +601,7 @@ input:focus {
     to { transform: translateY(0) scale(1); opacity: 1; }
 }
 #victory-card {
+    position: relative;
     background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
     border: 2px solid #2ed573;
     border-radius: 20px;
@@ -612,6 +613,37 @@ input:focus {
     animation: slideUp 0.5s ease-out;
     box-sizing: border-box;
 }
+
+/* Botón X de cierre para modales */
+.modal-close-x {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    z-index: 10;
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 50%;
+    transition: color 0.15s ease, background 0.15s ease;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-close-x:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+.modal-close-x:focus {
+    outline: 2px solid #2ed573;
+    outline-offset: 2px;
+}
+
 #victory-card.defeat {
     border-color: #e74c3c;
     box-shadow: 0 20px 60px rgba(231, 76, 60, 0.3);

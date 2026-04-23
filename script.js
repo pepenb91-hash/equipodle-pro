@@ -1340,15 +1340,24 @@ viewStatsBtn.addEventListener('click', () => {
     statsOverlay.classList.remove('hidden');
 });
 
-victoryOverlay.addEventListener('click', (e) => {
-    if (e.target === victoryOverlay) {
-        victoryOverlay.classList.add('hidden');
-        if (countdownInterval) {
-            clearInterval(countdownInterval);
-            countdownInterval = null;
-        }
+function closeVictoryOverlay() {
+    victoryOverlay.classList.add('hidden');
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
     }
+}
+
+// Click fuera del card (sobre el overlay) -> cerrar
+victoryOverlay.addEventListener('click', (e) => {
+    if (e.target === victoryOverlay) closeVictoryOverlay();
 });
+
+// Botón X arriba a la derecha -> cerrar
+const closeVictoryBtn = document.getElementById('close-victory-btn');
+if (closeVictoryBtn) {
+    closeVictoryBtn.addEventListener('click', closeVictoryOverlay);
+}
 
 infoBtn.addEventListener('click', () => {
     infoContent.innerHTML = howToPlayContent[currentLang];
