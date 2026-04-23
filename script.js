@@ -49,7 +49,9 @@ const i18n = {
         coffeeBtn: "Invítame a un café",
         diceText: "¿No sabes por dónde empezar? ¡Tira el dado!",
         aboutBtn: "Acerca de",
-        aboutTitle: "Acerca de Rondo"
+        aboutTitle: "Acerca de Rondo",
+        cookieText: "Usamos cookies para entender cómo se usa Rondo. Sin datos personales, sin anuncios.",
+        cookieAccept: "Entendido"
     },
     en: {
         attemptsTitle: "Number of attempts",
@@ -100,7 +102,9 @@ const i18n = {
         coffeeBtn: "Buy me a coffee",
         diceText: "Don't know where to start? Roll the dice!",
         aboutBtn: "About",
-        aboutTitle: "About Rondo"
+        aboutTitle: "About Rondo",
+        cookieText: "We use cookies to understand how Rondo is used. No personal data, no ads.",
+        cookieAccept: "Got it"
     }
 };
 
@@ -1541,5 +1545,48 @@ if (aboutOverlay) {
         if (e.target === aboutOverlay) aboutOverlay.classList.add('hidden');
     });
 }
+
+// ==========================================================
+// ==========  BANNER DE COOKIES ============================
+// ==========================================================
+
+const cookieBanner = document.getElementById('cookie-banner');
+const cookieAcceptBtn = document.getElementById('cookie-accept');
+const COOKIE_KEY = 'rondo_cookies_accepted';
+
+function checkCookieConsent() {
+    if (!cookieBanner) return;
+    const accepted = localStorage.getItem(COOKIE_KEY);
+    if (accepted) return;
+
+    // Función que verifica si hay algún modal abierto
+    function anyModalOpen() {
+        return !infoOverlay.classList.contains('hidden') ||
+               !aboutOverlay.classList.contains('hidden') ||
+               !statsOverlay.classList.contains('hidden') ||
+               !victoryOverlay.classList.contains('hidden') ||
+               !levelupOverlay.classList.contains('hidden');
+    }
+
+    // Intenta mostrar el banner cada 500ms hasta que no haya modales
+    function tryShowBanner() {
+        if (!anyModalOpen()) {
+            cookieBanner.classList.remove('hidden');
+        } else {
+            setTimeout(tryShowBanner, 500);
+        }
+    }
+
+    setTimeout(tryShowBanner, 1000);
+}
+
+if (cookieAcceptBtn) {
+    cookieAcceptBtn.addEventListener('click', () => {
+        localStorage.setItem(COOKIE_KEY, 'true');
+        cookieBanner.classList.add('hidden');
+    });
+}
+
+checkCookieConsent();
 
 init();

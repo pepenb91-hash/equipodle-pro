@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rondo — The daily football guessing game</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FS0NJZW97X"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-FS0NJZW97X', {
+            'anonymize_ip': true
+        });
+    </script>
 </head>
 <body>
     <!-- Barra superior -->
@@ -158,7 +169,7 @@
             <button id="close-about-btn" data-i18n="closeBtn">Close</button>
         </div>
     </div>
-    
+
     <!-- Modal "Cómo jugar" -->
     <div id="info-overlay" class="hidden">
         <div id="info-card">
@@ -179,5 +190,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
+
+    <!-- Banner de consentimiento -->
+    <div id="consent-banner" class="consent-banner hidden">
+        <span class="consent-text" data-i18n="cookieText">We use cookies to understand how Rondo is used. No personal data, no ads.</span>
+        <button id="consent-accept" class="consent-btn-accept" data-i18n="cookieAccept">Got it</button>
+    </div>
 </body>
 </html>
