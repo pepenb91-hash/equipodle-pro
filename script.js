@@ -1550,43 +1550,33 @@ if (aboutOverlay) {
 // ==========  BANNER DE COOKIES ============================
 // ==========================================================
 
-const cookieBanner = document.getElementById('cookie-banner');
-const cookieAcceptBtn = document.getElementById('cookie-accept');
 const COOKIE_KEY = 'rondo_cookies_accepted';
 
 function checkCookieConsent() {
-    if (!cookieBanner) return;
+    const banner = document.getElementById('consent-banner');
+    const acceptBtn = document.getElementById('consent-accept');
+    if (!banner || !acceptBtn) return;
+
+    // Listener del botón "Got it"
+    acceptBtn.addEventListener('click', () => {
+        localStorage.setItem(COOKIE_KEY, 'true');
+        banner.classList.add('hidden');
+    });
+
+    // Si ya aceptó, no mostrar
     const accepted = localStorage.getItem(COOKIE_KEY);
     if (accepted) return;
 
-    // Función que verifica si hay algún modal abierto
-    function anyModalOpen() {
-        return !infoOverlay.classList.contains('hidden') ||
-               !aboutOverlay.classList.contains('hidden') ||
-               !statsOverlay.classList.contains('hidden') ||
-               !victoryOverlay.classList.contains('hidden') ||
-               !levelupOverlay.classList.contains('hidden');
-    }
-
-    // Intenta mostrar el banner cada 500ms hasta que no haya modales
-    function tryShowBanner() {
-        if (!anyModalOpen()) {
-            cookieBanner.classList.remove('hidden');
-        } else {
-            setTimeout(tryShowBanner, 500);
-        }
-    }
-
-    setTimeout(tryShowBanner, 1000);
+    // Mostrar tras 2 segundos
+    setTimeout(() => {
+        banner.classList.remove('hidden');
+    }, 2000);
 }
 
-if (cookieAcceptBtn) {
-    cookieAcceptBtn.addEventListener('click', () => {
-        localStorage.setItem(COOKIE_KEY, 'true');
-        cookieBanner.classList.add('hidden');
-    });
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkCookieConsent);
+} else {
+    checkCookieConsent();
 }
-
-checkCookieConsent();
 
 init();
