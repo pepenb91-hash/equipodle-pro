@@ -51,7 +51,21 @@ const i18n = {
         aboutBtn: "Acerca de",
         aboutTitle: "Acerca de Rondo",
         cookieText: "Usamos cookies para entender cómo se usa Rondo. Sin datos personales, sin anuncios.",
-        cookieAccept: "Entendido"
+        cookieAccept: "Entendido",
+        modeDecade: "Decade",
+        decadeAttemptsLabel: "Intentos restantes",
+        decadeInstructions: "Arrastra los eventos de más antiguo a más reciente",
+        decadePoolLabel: "Eventos disponibles",
+        decadeSlotsLabel: "Orden cronológico",
+        decadeOldest: "MÁS ANTIGUO",
+        decadeNewest: "MÁS RECIENTE",
+        decadeSubmit: "Enviar respuesta",
+        decadeVictoryTitle: "¡Bien hecho!",
+        decadeVictoryText: "Has acertado el orden en",
+        decadeDefeatTitle: "Casi...",
+        decadeDefeatText: "Se acabaron los intentos. Este era el orden correcto:",
+        decadeAttemptWord: "intento",
+        decadeAttemptsWord: "intentos"
     },
     en: {
         attemptsTitle: "Number of attempts",
@@ -104,7 +118,21 @@ const i18n = {
         aboutBtn: "About",
         aboutTitle: "About Rondo",
         cookieText: "We use cookies to understand how Rondo is used. No personal data, no ads.",
-        cookieAccept: "Got it"
+        cookieAccept: "Got it",
+        modeDecade: "Decade",
+        decadeAttemptsLabel: "Attempts left",
+        decadeInstructions: "Drag the events from oldest to newest",
+        decadePoolLabel: "Available events",
+        decadeSlotsLabel: "Chronological order",
+        decadeOldest: "OLDEST",
+        decadeNewest: "NEWEST",
+        decadeSubmit: "Submit answer",
+        decadeVictoryTitle: "Well done!",
+        decadeVictoryText: "You guessed the order in",
+        decadeDefeatTitle: "Almost...",
+        decadeDefeatText: "Out of attempts. This was the correct order:",
+        decadeAttemptWord: "attempt",
+        decadeAttemptsWord: "attempts"
     }
 };
 
@@ -478,6 +506,11 @@ function createEmptyData() {
             stats: { played: 0, wins: 0, currentStreak: 0, maxStreak: 0, totalAttempts: 0 },
             lastPlayed: null,
             lastResult: null
+        },
+        decade: {
+            stats: { played: 0, wins: 0, currentStreak: 0, maxStreak: 0, totalAttempts: 0 },
+            lastPlayed: null,
+            lastResult: null
         }
     };
 }
@@ -505,7 +538,17 @@ function loadData() {
             }
             return createEmptyData();
         }
-        return JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        // Migración: si no existe la sección decade, la añadimos
+        if (!parsed.decade) {
+            parsed.decade = {
+                stats: { played: 0, wins: 0, currentStreak: 0, maxStreak: 0, totalAttempts: 0 },
+                lastPlayed: null,
+                lastResult: null
+            };
+            saveData(parsed);
+        }
+        return parsed;
     } catch (e) {
         return createEmptyData();
     }
@@ -775,7 +818,11 @@ function applyLanguage(lang) {
         const data = loadData();
         const section = data[currentMode];
         if (section.lastPlayed === getTodayKey() && section.lastResult) {
-            showDailyResultScreen();
+            if (currentMode === 'decade') {
+                showDecadeResultScreen();
+            } else {
+                showDailyResultScreen();
+            }
         }
     }
     if (!statsOverlay.classList.contains('hidden')) {
@@ -1127,18 +1174,29 @@ function switchMode(newMode) {
     document.querySelectorAll('.mode-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.mode === newMode);
     });
+
+    // Ocultar todos los modos
+    teamsContainer.classList.add('hidden');
+    legendsContainer.classList.add('hidden');
+    decadeContainer.classList.add('hidden');
+
+    // Mostrar el modo activo
     if (newMode === 'teams') {
         teamsContainer.classList.remove('hidden');
-        legendsContainer.classList.add('hidden');
-    } else {
-        teamsContainer.classList.add('hidden');
+    } else if (newMode === 'legends') {
         legendsContainer.classList.remove('hidden');
+    } else if (newMode === 'decade') {
+        decadeContainer.classList.remove('hidden');
     }
 
     const data = loadData();
     const section = data[newMode];
     if (section.lastPlayed === getTodayKey() && section.lastResult) {
-        showDailyResultScreen();
+        if (newMode === 'decade') {
+            showDecadeResultScreen();
+        } else {
+            showDailyResultScreen();
+        }
     } else {
         victoryOverlay.classList.add('hidden');
     }
@@ -1322,7 +1380,8 @@ function renderStatsModal() {
 
     grid.innerHTML =
         renderSection(dict.statsTeams, data.teams.stats) +
-        renderSection(dict.statsLegends, data.legends.stats);
+        renderSection(dict.statsLegends, data.legends.stats) +
+        renderSection('Decade', data.decade.stats);
 }
 
 statsBtn.addEventListener('click', () => {
@@ -1396,7 +1455,7 @@ function buildShareText() {
         txt = currentLang === 'es'
             ? `⚽ Rondo · Teams — ${dd}/${mm} ⚽\nAdivinado en ${attempts} ${attemptsWordEs} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: playrondo.app`
             : `⚽ Rondo · Teams — ${dd}/${mm} ⚽\nGuessed in ${attempts} ${attemptsWordEn} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: playrondo.app`;
-    } else {
+    } else if (currentMode === 'legends') {
         let grid = '';
         for (let i = 0; i < LEGEND_MAX_ATTEMPTS; i++) {
             if (i < attempts - 1) grid += '🟥';
@@ -1407,6 +1466,18 @@ function buildShareText() {
         txt = currentLang === 'es'
             ? `⭐ Rondo · Legends — ${dd}/${mm} ⭐\n${won ? 'Adivinado' : 'Fallido'} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: playrondo.app`
             : `⭐ Rondo · Legends — ${dd}/${mm} ⭐\n${won ? 'Guessed' : 'Failed'} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: playrondo.app`;
+    } else if (currentMode === 'decade') {
+        // Cada intento es una línea de 5 emojis (verde/rojo)
+        const grid = decadeAttemptHistory.map(attempt =>
+            attempt.map(s => s === 'correct' ? '🟩' : '🟥').join('')
+        ).join('\n');
+
+        const attemptsWordEs = attempts === 1 ? 'intento' : 'intentos';
+        const attemptsWordEn = attempts === 1 ? 'try' : 'tries';
+
+        txt = currentLang === 'es'
+            ? `📅 Rondo · Decade — ${dd}/${mm} 📅\n${won ? `Acertado en ${attempts} ${attemptsWordEs}` : 'Fallido'} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: playrondo.app`
+            : `📅 Rondo · Decade — ${dd}/${mm} 📅\n${won ? `Solved in ${attempts} ${attemptsWordEn}` : 'Failed'} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: playrondo.app`;
     }
 
     return txt;
@@ -1605,4 +1676,494 @@ if (document.readyState === 'loading') {
     checkCookieConsent();
 }
 
+// ==========================================================
+// ==========  MODO DECADE ==================================
+// ==========================================================
+
+const DECADE_MAX_ATTEMPTS = 3;
+const DECADE_EVENTS_PER_DAY = 5;
+
+const CATEGORY_ICONS = {
+    transfer: '💰',
+    trophy: '🏆',
+    debut: '👶',
+    retire: '👋',
+    award: '⭐',
+    milestone: '🎯',
+    record: '📜',
+    drama: '💔'
+};
+
+let decadeDailyEvents = [];      // Los 5 eventos del día
+let decadeAttemptsCount = 0;
+let decadeGameOver = false;
+let decadePlayerOrder = [null, null, null, null, null]; // Lo que el usuario pone en los slots
+let decadeAttemptHistory = [];   // Historial de intentos para compartir
+
+const decadeContainer = document.getElementById('decade-container');
+const decadePool = document.getElementById('decade-pool');
+const decadeSlotsContainer = document.getElementById('decade-slots');
+const decadeAttemptsNumber = document.getElementById('decade-attempts-number');
+const decadeSubmitBtn = document.getElementById('decade-submit-btn');
+
+// Selecciona 5 eventos aleatorios del día (mismo seed que Teams/Legends)
+function getDailyDecadeEvents() {
+    const seed = dateToSeed(getTodayKey()) + 13579;
+    // Crear array de índices barajados de forma determinista
+    const indices = [...Array(decadeEvents.length).keys()];
+    let s = seed;
+    for (let i = indices.length - 1; i > 0; i--) {
+        s = (s * 9301 + 49297) % 233280;
+        const j = Math.floor((s / 233280) * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    return indices.slice(0, DECADE_EVENTS_PER_DAY).map(i => decadeEvents[i]);
+}
+
+// Renderiza la pool de eventos disponibles
+function renderDecadePool() {
+    decadePool.innerHTML = '';
+    decadeDailyEvents.forEach(event => {
+        // Si el evento ya está en algún slot, no lo mostramos en el pool
+        if (decadePlayerOrder.includes(event.id)) return;
+        const eventEl = createDecadeEventElement(event);
+        decadePool.appendChild(eventEl);
+    });
+}
+
+// Crea el elemento HTML de un evento (carta arrastrable)
+function createDecadeEventElement(event) {
+    const el = document.createElement('div');
+    el.className = 'decade-event';
+    el.draggable = true;
+    el.dataset.eventId = event.id;
+    el.innerHTML = `
+        <span class="decade-event-icon">${CATEGORY_ICONS[event.category] || '📅'}</span>
+        <span class="decade-event-text">${event.text}</span>
+    `;
+    return el;
+}
+
+// Renderiza los slots con los eventos colocados
+function renderDecadeSlots() {
+    const slots = decadeSlotsContainer.querySelectorAll('.decade-slot-drop');
+    slots.forEach((slot, idx) => {
+        slot.innerHTML = '';
+        slot.classList.remove('filled', 'correct', 'incorrect');
+        const eventId = decadePlayerOrder[idx];
+        if (eventId) {
+            const event = decadeDailyEvents.find(e => e.id === eventId);
+            if (event) {
+                slot.classList.add('filled');
+                slot.draggable = true;
+                slot.dataset.eventId = event.id;
+                slot.innerHTML = `
+                    <span class="decade-event-icon">${CATEGORY_ICONS[event.category] || '📅'}</span>
+                    <span class="decade-event-text">${event.text}</span>
+                `;
+            }
+        }
+    });
+    updateDecadeSubmitButton();
+}
+
+// Habilitar/deshabilitar el botón Submit
+function updateDecadeSubmitButton() {
+    const allFilled = decadePlayerOrder.every(id => id !== null);
+    decadeSubmitBtn.disabled = !allFilled || decadeGameOver;
+}
+
+// ==========================================================
+// ===== DRAG & DROP DEL MODO DECADE ========================
+// ==========================================================
+
+let decadeDraggedEventId = null;
+let decadeDraggedFrom = null; // 'pool' o índice numérico (slot)
+
+// Configurar drag & drop en el pool y los slots
+function setupDecadeDragAndDrop() {
+    // Eventos del pool (delegación: se aplica a los hijos)
+    decadePool.addEventListener('dragstart', handleDragStart);
+    decadePool.addEventListener('dragend', handleDragEnd);
+    decadePool.addEventListener('dragover', (e) => e.preventDefault());
+    decadePool.addEventListener('drop', handleDropOnPool);
+
+    // Eventos en los slots
+    const slots = decadeSlotsContainer.querySelectorAll('.decade-slot-drop');
+    slots.forEach(slot => {
+        slot.addEventListener('dragstart', handleDragStart);
+        slot.addEventListener('dragend', handleDragEnd);
+        slot.addEventListener('dragover', handleDragOver);
+        slot.addEventListener('dragleave', handleDragLeave);
+        slot.addEventListener('drop', handleDropOnSlot);
+    });
+
+    // Soporte para móvil (touch events)
+    setupTouchDragAndDrop();
+}
+
+function handleDragStart(e) {
+    if (decadeGameOver) { e.preventDefault(); return; }
+    const target = e.target.closest('.decade-event, .decade-slot-drop.filled');
+    if (!target) { e.preventDefault(); return; }
+    decadeDraggedEventId = target.dataset.eventId;
+    decadeDraggedFrom = target.classList.contains('decade-event')
+        ? 'pool'
+        : parseInt(target.dataset.position, 10);
+    target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    // Hack para Firefox
+    e.dataTransfer.setData('text/plain', decadeDraggedEventId);
+}
+
+function handleDragEnd(e) {
+    document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+    document.querySelectorAll('.drop-hover').forEach(el => el.classList.remove('drop-hover'));
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('drop-hover');
+}
+
+function handleDragLeave(e) {
+    e.currentTarget.classList.remove('drop-hover');
+}
+
+function handleDropOnSlot(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drop-hover');
+    if (!decadeDraggedEventId || decadeGameOver) return;
+
+    const targetPos = parseInt(e.currentTarget.dataset.position, 10);
+
+    // Si arrastras de un slot a otro slot, intercambia
+    if (typeof decadeDraggedFrom === 'number' && decadeDraggedFrom !== targetPos) {
+        const tmp = decadePlayerOrder[targetPos];
+        decadePlayerOrder[targetPos] = decadePlayerOrder[decadeDraggedFrom];
+        decadePlayerOrder[decadeDraggedFrom] = tmp;
+    } else if (decadeDraggedFrom === 'pool') {
+        // Si arrastras del pool, sustituye lo que haya en el slot (lo devuelve al pool)
+        decadePlayerOrder[targetPos] = decadeDraggedEventId;
+    }
+
+    decadeDraggedEventId = null;
+    decadeDraggedFrom = null;
+    renderDecadePool();
+    renderDecadeSlots();
+}
+
+function handleDropOnPool(e) {
+    e.preventDefault();
+    if (!decadeDraggedEventId || decadeGameOver) return;
+
+    // Si vino de un slot, lo quitamos del slot
+    if (typeof decadeDraggedFrom === 'number') {
+        decadePlayerOrder[decadeDraggedFrom] = null;
+    }
+
+    decadeDraggedEventId = null;
+    decadeDraggedFrom = null;
+    renderDecadePool();
+    renderDecadeSlots();
+}
+
+// ==========================================================
+// ===== TOUCH SUPPORT (móvil) ==============================
+// ==========================================================
+
+let touchDraggedEl = null;
+let touchClone = null;
+
+function setupTouchDragAndDrop() {
+    decadeContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
+    decadeContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+    decadeContainer.addEventListener('touchend', handleTouchEnd);
+    decadeContainer.addEventListener('touchcancel', handleTouchEnd);
+}
+
+function handleTouchStart(e) {
+    if (decadeGameOver) return;
+    const target = e.target.closest('.decade-event, .decade-slot-drop.filled');
+    if (!target) return;
+    e.preventDefault();
+
+    touchDraggedEl = target;
+    decadeDraggedEventId = target.dataset.eventId;
+    decadeDraggedFrom = target.classList.contains('decade-event')
+        ? 'pool'
+        : parseInt(target.dataset.position, 10);
+
+    // Crear clon visual que sigue al dedo
+    touchClone = target.cloneNode(true);
+    touchClone.style.position = 'fixed';
+    touchClone.style.pointerEvents = 'none';
+    touchClone.style.opacity = '0.85';
+    touchClone.style.zIndex = '9999';
+    touchClone.style.width = target.offsetWidth + 'px';
+    touchClone.style.transform = 'scale(1.05)';
+    document.body.appendChild(touchClone);
+
+    target.classList.add('dragging');
+    moveTouchClone(e.touches[0]);
+}
+
+function handleTouchMove(e) {
+    if (!touchDraggedEl) return;
+    e.preventDefault();
+    moveTouchClone(e.touches[0]);
+
+    // Detectar el slot bajo el dedo
+    const touch = e.touches[0];
+    const elBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    document.querySelectorAll('.drop-hover').forEach(el => el.classList.remove('drop-hover'));
+
+    if (elBelow) {
+        const slot = elBelow.closest('.decade-slot-drop');
+        if (slot) slot.classList.add('drop-hover');
+    }
+}
+
+function handleTouchEnd(e) {
+    if (!touchDraggedEl) return;
+
+    const touch = (e.changedTouches && e.changedTouches[0]) || null;
+    if (touch) {
+        const elBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (elBelow) {
+            const slot = elBelow.closest('.decade-slot-drop');
+            const pool = elBelow.closest('#decade-pool, #decade-pool-section');
+
+            if (slot) {
+                const targetPos = parseInt(slot.dataset.position, 10);
+                if (typeof decadeDraggedFrom === 'number' && decadeDraggedFrom !== targetPos) {
+                    const tmp = decadePlayerOrder[targetPos];
+                    decadePlayerOrder[targetPos] = decadePlayerOrder[decadeDraggedFrom];
+                    decadePlayerOrder[decadeDraggedFrom] = tmp;
+                } else if (decadeDraggedFrom === 'pool') {
+                    decadePlayerOrder[targetPos] = decadeDraggedEventId;
+                }
+                renderDecadePool();
+                renderDecadeSlots();
+            } else if (pool) {
+                if (typeof decadeDraggedFrom === 'number') {
+                    decadePlayerOrder[decadeDraggedFrom] = null;
+                    renderDecadePool();
+                    renderDecadeSlots();
+                }
+            }
+        }
+    }
+
+    // Limpiar
+    if (touchClone) {
+        touchClone.remove();
+        touchClone = null;
+    }
+    touchDraggedEl.classList.remove('dragging');
+    touchDraggedEl = null;
+    decadeDraggedEventId = null;
+    decadeDraggedFrom = null;
+    document.querySelectorAll('.drop-hover').forEach(el => el.classList.remove('drop-hover'));
+}
+
+function moveTouchClone(touch) {
+    if (!touchClone) return;
+    touchClone.style.left = (touch.clientX - touchClone.offsetWidth / 2) + 'px';
+    touchClone.style.top = (touch.clientY - touchClone.offsetHeight / 2) + 'px';
+}
+
+// Inicializar el modo Decade
+function initDecadeMode() {
+    decadeDailyEvents = getDailyDecadeEvents();
+    decadePlayerOrder = [null, null, null, null, null];
+    decadeAttemptsCount = 0;
+    decadeGameOver = false;
+    decadeAttemptHistory = [];
+
+    decadeAttemptsNumber.innerText = DECADE_MAX_ATTEMPTS;
+    renderDecadePool();
+    renderDecadeSlots();
+    setupDecadeDragAndDrop();
+}
+
+// ==========================================================
+// ===== LÓGICA DE COMPARACIÓN + FEEDBACK ===================
+// ==========================================================
+
+// Calcula el orden correcto (de menor a mayor año)
+function getDecadeCorrectOrder() {
+    return [...decadeDailyEvents]
+        .sort((a, b) => a.year - b.year)
+        .map(e => e.id);
+}
+
+// Comprueba la respuesta del usuario y aplica feedback
+function submitDecadeAnswer() {
+    if (decadeGameOver) return;
+    if (decadePlayerOrder.some(id => id === null)) return;
+
+    decadeAttemptsCount++;
+    const correctOrder = getDecadeCorrectOrder();
+    const slots = decadeSlotsContainer.querySelectorAll('.decade-slot-drop');
+
+    // Comparar cada posición y marcar visualmente
+    const statuses = []; // 'correct' o 'incorrect' por cada posición
+    decadePlayerOrder.forEach((eventId, idx) => {
+        const isCorrect = eventId === correctOrder[idx];
+        statuses.push(isCorrect ? 'correct' : 'incorrect');
+        slots[idx].classList.add(isCorrect ? 'correct' : 'incorrect');
+    });
+
+    // Guardar el intento para el share posterior
+    decadeAttemptHistory.push(statuses);
+
+    const allCorrect = statuses.every(s => s === 'correct');
+
+    // GANÓ
+    if (allCorrect) {
+        finishDecadeGame(true);
+        return;
+    }
+
+    // PERDIÓ (sin intentos)
+    if (decadeAttemptsCount >= DECADE_MAX_ATTEMPTS) {
+        finishDecadeGame(false);
+        return;
+    }
+
+    // SIGUE JUGANDO: tras 1.5s, devolver al pool los eventos mal posicionados
+    decadeAttemptsNumber.innerText = DECADE_MAX_ATTEMPTS - decadeAttemptsCount;
+    decadeSubmitBtn.disabled = true;
+
+    setTimeout(() => {
+        // Mantener solo los correctos en sus slots
+        decadePlayerOrder = decadePlayerOrder.map((id, idx) => {
+            return statuses[idx] === 'correct' ? id : null;
+        });
+        renderDecadePool();
+        renderDecadeSlots();
+    }, 1500);
+}
+
+// Cierra la partida (ganada o perdida)
+function finishDecadeGame(won) {
+    decadeGameOver = true;
+    decadeSubmitBtn.disabled = true;
+
+    // Guardar resultado en localStorage
+    recordGameResult(
+        'decade',
+        won,
+        decadeAttemptsCount,
+        'decade-' + getTodayKey(),  // identificador del día
+        null
+    );
+    updateStreakCapsule();
+
+    if (won) launchFireworks();
+
+    // Mostrar pantalla de resultado tras 2 segundos
+    setTimeout(() => {
+        showDecadeResultScreen();
+    }, won ? 2200 : 1500);
+}
+
+// Listener del botón Submit
+decadeSubmitBtn.addEventListener('click', submitDecadeAnswer);
+
+// ==========================================================
+// ===== PANTALLA DE RESULTADO DEL DECADE ===================
+// ==========================================================
+
+function showDecadeResultScreen() {
+    const data = loadData();
+    const section = data.decade;
+    if (!section.lastResult) return;
+
+    const card = document.getElementById('victory-card');
+    const heading = document.getElementById('victory-heading');
+    const emoji = card.querySelector('.confetti-emoji');
+    const message = document.getElementById('victory-message');
+    const dict = i18n[currentLang];
+
+    card.classList.remove('defeat');
+    const won = section.lastResult.won;
+
+    if (won) {
+        heading.innerText = dict.decadeVictoryTitle;
+        emoji.innerText = '🏆';
+        const attemptsWord = section.lastResult.attempts === 1
+            ? dict.decadeAttemptWord
+            : dict.decadeAttemptsWord;
+        message.innerHTML = `
+            <span>${dict.decadeVictoryText}</span>
+            <span id="victory-attempts">${section.lastResult.attempts}</span>
+            <span>${attemptsWord}</span>
+        `;
+    } else {
+        card.classList.add('defeat');
+        heading.innerText = dict.decadeDefeatTitle;
+        emoji.innerText = '😢';
+        message.innerHTML = `<span>${dict.decadeDefeatText}</span>`;
+    }
+
+    // Mostrar el orden correcto con descripciones educativas
+    const victoryTeamDiv = document.getElementById('victory-team');
+    victoryTeamDiv.innerHTML = '';
+    victoryTeamDiv.style.flexDirection = 'column';
+    victoryTeamDiv.style.alignItems = 'stretch';
+    victoryTeamDiv.style.gap = '8px';
+    victoryTeamDiv.style.padding = '14px 14px';
+
+    const correctOrder = getDecadeCorrectOrder();
+    correctOrder.forEach((eventId, idx) => {
+        const event = decadeDailyEvents.find(e => e.id === eventId);
+        if (!event) return;
+
+        const item = document.createElement('div');
+        item.className = 'decade-result-item';
+        item.innerHTML = `
+            <div class="decade-result-header">
+                <span class="decade-result-icon">${CATEGORY_ICONS[event.category] || '📅'}</span>
+                <span class="decade-result-year">${event.year}</span>
+                <span class="decade-result-text">${event.text}</span>
+            </div>
+            <div class="decade-result-desc">${event.description}</div>
+        `;
+        victoryTeamDiv.appendChild(item);
+    });
+
+    renderMiniStats(section.stats);
+    startCountdown();
+
+    // Cambiar texto del countdown
+    const countdownLabel = document.querySelector('.countdown-label');
+    if (countdownLabel) {
+        countdownLabel.innerText = currentLang === 'es' ? 'Próximo Decade en' : 'Next Decade in';
+    }
+
+    victoryOverlay.classList.remove('hidden');
+}
+
+// Restaurar partida del Decade si ya jugó hoy
+function checkDecadeDailyState() {
+    const data = loadData();
+    if (data.decade.lastPlayed === getTodayKey() && data.decade.lastResult) {
+        decadeGameOver = true;
+        decadeSubmitBtn.disabled = true;
+        // Si está en modo Decade actualmente, mostrar la pantalla
+        if (currentMode === 'decade') {
+            showDecadeResultScreen();
+        }
+    }
+}
+
+
+
+// Inicializar al cargar la página
+initDecadeMode();
+checkDecadeDailyState();
 init();

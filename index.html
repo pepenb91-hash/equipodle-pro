@@ -43,6 +43,7 @@
     <div id="mode-switcher">
         <button class="mode-btn active" data-mode="teams" data-i18n="modeTeams">Teams</button>
         <button class="mode-btn" data-mode="legends" data-i18n="modeLegends">Legends</button>
+        <button class="mode-btn" data-mode="decade" data-i18n="modeDecade">Decade</button>
     </div>
 
     <!-- ========== MODO TEAMS ========== -->
@@ -111,6 +112,55 @@
 
         <!-- Lista de intentos fallidos -->
         <div id="legend-guesses-container"></div>
+    </div>
+
+    <!-- ========== MODO DECADE ========== -->
+    <div id="decade-container" class="mode-section hidden">
+        <h1 class="mode-title">Rondo <span>· Decade</span></h1>
+
+        <div id="decade-attempts-counter">
+            <div class="attempts-title" data-i18n="decadeAttemptsLabel">Attempts left</div>
+            <div id="decade-attempts-number">3</div>
+        </div>
+
+        <div id="decade-instructions" data-i18n="decadeInstructions">
+            Drag the events from oldest to newest
+        </div>
+
+        <!-- Eventos disponibles (se arrastran desde aquí) -->
+        <div id="decade-pool-section">
+            <div class="decade-section-label" data-i18n="decadePoolLabel">Available events</div>
+            <div id="decade-pool"></div>
+        </div>
+
+        <!-- Slots cronológicos (se arrastran a aquí) -->
+        <div id="decade-slots-section">
+            <div class="decade-section-label" data-i18n="decadeSlotsLabel">Chronological order</div>
+            <div id="decade-slots">
+                <div class="decade-slot" data-position="0">
+                    <span class="decade-slot-label decade-slot-label-edge" data-i18n="decadeOldest">OLDEST</span>
+                    <div class="decade-slot-drop" data-position="0"></div>
+                </div>
+                <div class="decade-slot" data-position="1">
+                    <span class="decade-slot-label">2ND</span>
+                    <div class="decade-slot-drop" data-position="1"></div>
+                </div>
+                <div class="decade-slot" data-position="2">
+                    <span class="decade-slot-label">3RD</span>
+                    <div class="decade-slot-drop" data-position="2"></div>
+                </div>
+                <div class="decade-slot" data-position="3">
+                    <span class="decade-slot-label">4TH</span>
+                    <div class="decade-slot-drop" data-position="3"></div>
+                </div>
+                <div class="decade-slot" data-position="4">
+                    <span class="decade-slot-label decade-slot-label-edge" data-i18n="decadeNewest">NEWEST</span>
+                    <div class="decade-slot-drop" data-position="4"></div>
+                </div>
+            </div>
+        </div>
+
+        <button id="decade-submit-btn" data-i18n="decadeSubmit" disabled>Submit answer</button>
     </div>
 
     <!-- Pantalla de victoria (se reusa para ambos modos) -->
@@ -190,6 +240,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="decade_events.js"></script>
     <script src="script.js"></script>
 
     <!-- Banner de consentimiento -->
