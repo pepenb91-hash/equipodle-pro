@@ -834,6 +834,12 @@ function applyLanguage(lang) {
     if (!aboutOverlay.classList.contains('hidden')) {
         aboutContentEl.innerHTML = aboutContent[lang];
     }
+
+    // Refrescar eventos del modo Decade (texto bilingüe)
+    if (typeof renderDecadePool === 'function' && typeof decadeDailyEvents !== 'undefined' && decadeDailyEvents.length > 0) {
+        renderDecadePool();
+        renderDecadeSlots();
+    }
 }
 
 function refreshColorCells() {
@@ -1739,7 +1745,7 @@ function createDecadeEventElement(event) {
     el.dataset.eventId = event.id;
     el.innerHTML = `
         <span class="decade-event-icon">${CATEGORY_ICONS[event.category] || '📅'}</span>
-        <span class="decade-event-text">${event.text}</span>
+        <span class="decade-event-text">${event.text[currentLang]}</span>
     `;
     return el;
 }
@@ -1759,7 +1765,7 @@ function renderDecadeSlots() {
                 slot.dataset.eventId = event.id;
                 slot.innerHTML = `
                     <span class="decade-event-icon">${CATEGORY_ICONS[event.category] || '📅'}</span>
-                    <span class="decade-event-text">${event.text}</span>
+                    <span class="decade-event-text">${event.text[currentLang]}</span>
                 `;
             }
         }
@@ -2129,9 +2135,9 @@ function showDecadeResultScreen() {
             <div class="decade-result-header">
                 <span class="decade-result-icon">${CATEGORY_ICONS[event.category] || '📅'}</span>
                 <span class="decade-result-year">${event.year}</span>
-                <span class="decade-result-text">${event.text}</span>
+                <span class="decade-result-text">${event.text[currentLang]}</span>
             </div>
-            <div class="decade-result-desc">${event.description}</div>
+            <div class="decade-result-desc">${event.description[currentLang]}</div>
         `;
         victoryTeamDiv.appendChild(item);
     });
