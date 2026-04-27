@@ -955,6 +955,7 @@ async function makeGuess(userTeam) {
         headerRow.classList.remove('hidden');
         const intro = document.getElementById('teams-intro');
         if (intro) intro.classList.add('hidden-fade');
+        hideDice();
     }
 
     const row = document.createElement('div');
@@ -1617,6 +1618,8 @@ function init() {
         input.disabled = true;
         const intro = document.getElementById('teams-intro');
         if (intro) intro.classList.add('hidden-fade');
+        const dice = document.getElementById('dice-suggest');
+        if (dice) dice.classList.add('hidden-fade');
         if (currentMode === 'teams') {
             showDailyResultScreen();
         }
