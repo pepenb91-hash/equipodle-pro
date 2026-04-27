@@ -480,7 +480,13 @@ function getTodayKey() {
 }
 
 function dateToSeed(dateStr) {
-    return parseInt(dateStr.replaceAll('-', ''), 10);
+    let h = parseInt(dateStr.replaceAll('-', ''), 10);
+    // Mezcla de bits para distribución uniforme entre todas las ligas
+    h = (h * 2654435761) >>> 0;
+    h = h ^ (h >>> 16);
+    h = (h * 2246822519) >>> 0;
+    h = h ^ (h >>> 13);
+    return h >>> 0;
 }
 
 function getDailyTeam() {
@@ -1112,8 +1118,37 @@ function updateLegendBlur() {
     legendPhoto.classList.add(`blur-${remaining}`);
 }
 
-function updateLegendAttemptsUI() {
-    legendAttemptsNumber.innerText = (LEGEND_MAX_ATTEMPTS - legendAttemptsCount);
+function updateLegendAttemptsUI(animateLossIndex = -1) {
+    const remaining = LEGEND_MAX_ATTEMPTS - legendAttemptsCount;
+    legendAttemptsNumber.innerText = remaining;
+
+    const balls = document.getElementById('legends-attempts-balls');
+    if (!balls) return;
+
+    // Si no hay balones aún, los creamos todos de golpe
+    if (balls.children.length !== LEGEND_MAX_ATTEMPTS) {
+        balls.innerHTML = '';
+        for (let i = 0; i < LEGEND_MAX_ATTEMPTS; i++) {
+            const span = document.createElement('span');
+            span.innerText = '⚽';
+            balls.appendChild(span);
+        }
+    }
+
+    // Marcar como perdidos los que ya se gastaron
+    for (let i = 0; i < LEGEND_MAX_ATTEMPTS; i++) {
+        const span = balls.children[i];
+        if (i < legendAttemptsCount) {
+            span.classList.add('lost');
+            // Animar solo el balón recién perdido
+            if (i === animateLossIndex) {
+                span.classList.add('losing');
+                setTimeout(() => span.classList.remove('losing'), 600);
+            }
+        } else {
+            span.classList.remove('lost');
+        }
+    }
 }
 
 function showLegendHint() {
@@ -1151,7 +1186,7 @@ function makeLegendGuess(userLegend) {
     legendGuessesContainer.prepend(row);
 
     updateLegendBlur();
-    updateLegendAttemptsUI();
+    updateLegendAttemptsUI(legendAttemptsCount - 1);
 
     if (legendAttemptsCount >= 5) {
         showLegendHint();
@@ -1989,7 +2024,7 @@ function initDecadeMode() {
     decadeGameOver = false;
     decadeAttemptHistory = [];
 
-    decadeAttemptsNumber.innerText = DECADE_MAX_ATTEMPTS;
+    updateDecadeAttemptsUI();
     renderDecadePool();
     renderDecadeSlots();
     setupDecadeDragAndDrop();
@@ -2041,7 +2076,7 @@ function submitDecadeAnswer() {
     }
 
     // SIGUE JUGANDO: tras 1.5s, devolver al pool los eventos mal posicionados
-    decadeAttemptsNumber.innerText = DECADE_MAX_ATTEMPTS - decadeAttemptsCount;
+    updateDecadeAttemptsUI(decadeAttemptsCount - 1);
     decadeSubmitBtn.disabled = true;
 
     setTimeout(() => {
@@ -2079,6 +2114,36 @@ function finishDecadeGame(won) {
 
 // Listener del botón Submit
 decadeSubmitBtn.addEventListener('click', submitDecadeAnswer);
+
+function updateDecadeAttemptsUI(animateLossIndex = -1) {
+    const remaining = DECADE_MAX_ATTEMPTS - decadeAttemptsCount;
+    decadeAttemptsNumber.innerText = remaining;
+
+    const balls = document.getElementById('decade-attempts-balls');
+    if (!balls) return;
+
+    if (balls.children.length !== DECADE_MAX_ATTEMPTS) {
+        balls.innerHTML = '';
+        for (let i = 0; i < DECADE_MAX_ATTEMPTS; i++) {
+            const span = document.createElement('span');
+            span.innerText = '⚽';
+            balls.appendChild(span);
+        }
+    }
+
+    for (let i = 0; i < DECADE_MAX_ATTEMPTS; i++) {
+        const span = balls.children[i];
+        if (i < decadeAttemptsCount) {
+            span.classList.add('lost');
+            if (i === animateLossIndex) {
+                span.classList.add('losing');
+                setTimeout(() => span.classList.remove('losing'), 600);
+            }
+        } else {
+            span.classList.remove('lost');
+        }
+    }
+}
 
 // ==========================================================
 // ===== PANTALLA DE RESULTADO DEL DECADE ===================

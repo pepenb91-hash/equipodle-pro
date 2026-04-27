@@ -299,7 +299,39 @@ h1 {
 .attempts-title { font-size: 0.85rem; color: #aaa; letter-spacing: 1px; text-transform: uppercase; }
 #attempts-number,
 #legends-attempts-number { font-size: 2.2rem; font-weight: bold; color: #2ed573; margin: 4px 0; }
-#attempts-balls { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; max-width: 300px; }
+#attempts-balls,
+#legends-attempts-balls,
+#decade-attempts-balls {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+/* Vidas: balón verde activo / gris perdido (Legends y Decade) */
+#legends-attempts-balls span,
+#decade-attempts-balls span {
+    font-size: 1.1rem;
+    transition: filter 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
+    display: inline-block;
+}
+#legends-attempts-balls span.lost,
+#decade-attempts-balls span.lost {
+    filter: grayscale(1) brightness(0.5);
+    opacity: 0.4;
+}
+@keyframes ball-lose {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.4) rotate(-15deg); }
+    60%  { transform: scale(0.85) rotate(8deg); }
+    100% { transform: scale(1) rotate(0); }
+}
+#legends-attempts-balls span.losing,
+#decade-attempts-balls span.losing {
+    animation: ball-lose 0.5s ease;
+}
 
 .search-box { position: relative; width: 100%; max-width: 500px; margin-bottom: 30px; }
 input {
