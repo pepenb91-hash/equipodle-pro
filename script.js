@@ -1,6 +1,7 @@
 // ---------- Diccionarios de traducción ----------
 const i18n = {
     es: {
+        teamsIntro: "Adivina el equipo misterioso del día. Cada intento te dará pistas en cada categoría.",
         attemptsTitle: "Número de intentos",
         inputPlaceholder: "Escribe el nombre de un equipo...",
         colLeague: "Liga",
@@ -68,6 +69,7 @@ const i18n = {
         decadeAttemptsWord: "intentos"
     },
     en: {
+        teamsIntro: "Guess today's mystery team. Each guess will give you clues in every category.",
         attemptsTitle: "Number of attempts",
         inputPlaceholder: "Type a team name...",
         colLeague: "League",
@@ -196,10 +198,10 @@ const howToPlayContent = {
     es: `
         <p>Hay dos modos: <strong>Teams</strong> (adivina un equipo por sus pistas) y <strong>Legends</strong> (adivina un jugador por su foto borrosa).</p>
         <h3>Modo Teams</h3>
-        <p>Cada día hay un <strong>equipo secreto</strong> de las 5 grandes ligas europeas. Escribe el nombre de cualquier equipo y aparecerán 7 pistas: <strong>Liga, Títulos, Color, Valor, Años en 1ª, Marca y Estadio</strong>.</p>
+        <p>Cada día hay un <strong>equipo misterioso</strong> de las 5 grandes ligas europeas. Escribe el nombre de cualquier equipo y aparecerán 7 pistas: <strong>Liga, Títulos, Color, Valor, Años en 1ª, Marca y Estadio</strong>.</p>
         <div class="info-legend">
             <div class="info-legend-swatch correct">✓</div>
-            <div class="info-legend-text"><strong>Verde:</strong> ¡acertado! Coincide con el equipo secreto.</div>
+            <div class="info-legend-text"><strong>Verde:</strong> ¡acertado! Coincide con el equipo misterioso.</div>
         </div>
         <div class="info-legend">
             <div class="info-legend-swatch partial">~</div>
@@ -220,10 +222,10 @@ const howToPlayContent = {
     en: `
         <p>There are two modes: <strong>Teams</strong> (guess a team by clues) and <strong>Legends</strong> (guess a player from a blurred photo).</p>
         <h3>Teams mode</h3>
-        <p>Every day there's a <strong>secret team</strong> from Europe's top 5 leagues. Type any team name and you'll see 7 clues: <strong>League, Titles, Color, Value, Years in Top, Brand and Stadium</strong>.</p>
+        <p>Every day there's a <strong>mystery team</strong> from Europe's top 5 leagues. Type any team name and you'll see 7 clues: <strong>League, Titles, Color, Value, Years in Top, Brand and Stadium</strong>.</p>
         <div class="info-legend">
             <div class="info-legend-swatch correct">✓</div>
-            <div class="info-legend-text"><strong>Green:</strong> correct! Matches the secret team.</div>
+            <div class="info-legend-text"><strong>Green:</strong> correct! Matches the mystery team.</div>
         </div>
         <div class="info-legend">
             <div class="info-legend-swatch partial">~</div>
@@ -949,7 +951,11 @@ async function makeGuess(userTeam) {
     guessedTeams.push(userTeam.name);
     updateAttemptsUI();
 
-    if (attemptsCount === 1) headerRow.classList.remove('hidden');
+    if (attemptsCount === 1) {
+        headerRow.classList.remove('hidden');
+        const intro = document.getElementById('teams-intro');
+        if (intro) intro.classList.add('hidden-fade');
+    }
 
     const row = document.createElement('div');
     row.className = 'guess-row';
@@ -1609,6 +1615,8 @@ function init() {
     if (data.teams.lastPlayed === getTodayKey() && data.teams.lastResult) {
         gameOver = true;
         input.disabled = true;
+        const intro = document.getElementById('teams-intro');
+        if (intro) intro.classList.add('hidden-fade');
         if (currentMode === 'teams') {
             showDailyResultScreen();
         }
