@@ -196,7 +196,7 @@ function translateColor(color) {
 // ---------- Contenido "Cómo jugar" ----------
 const howToPlayContent = {
     es: `
-        <p>Hay dos modos: <strong>Teams</strong> (adivina un equipo por sus pistas) y <strong>Legends</strong> (adivina un jugador por su foto borrosa).</p>
+        <p>Hay tres modos: <strong>Teams</strong> (adivina un equipo por sus pistas), <strong>Legends</strong> (adivina un jugador por su foto borrosa) y <strong>Decade</strong> (ordena 5 eventos del fútbol cronológicamente).</p>
         <h3>Modo Teams</h3>
         <p>Cada día hay un <strong>equipo misterioso</strong> de las 5 grandes ligas europeas. Escribe el nombre de cualquier equipo y aparecerán 7 pistas: <strong>Liga, Títulos, Color, Valor, Años en 1ª, Marca y Estadio</strong>.</p>
         <div class="info-legend">
@@ -213,14 +213,17 @@ const howToPlayContent = {
         </div>
         <h3>Modo Legends</h3>
         <p>Una foto borrosa de un jugador legendario. Tienes <strong>10 intentos</strong>. Con cada fallo, la foto se ve un poco más nítida. Tras 5 fallos verás también el año de nacimiento como pista extra.</p>
+        <h3>Modo Decade</h3>
+        <p>Cada día hay <strong>5 eventos</strong> de la historia del fútbol (fichajes, títulos, debuts, retiradas, premios...). Tienes que <strong>ordenarlos cronológicamente</strong>, del más antiguo al más reciente, arrastrándolos a los huecos.</p>
+        <p>Tienes <strong>3 intentos</strong>. Tras cada intento verás los eventos en su posición correcta en verde, los que están cerca en amarillo, y los incorrectos en rojo. Los aciertos quedan fijados para el siguiente intento.</p>
         <h3>Modo diario</h3>
-        <p>Solo puedes jugar <strong>una partida al día de cada modo</strong>. Ambos cambian a medianoche (hora local).</p>
+        <p>Solo puedes jugar <strong>una partida al día de cada modo</strong>. Los tres cambian a medianoche (hora local).</p>
         <h3>Racha</h3>
-        <p>La racha de Teams y Legends son <strong>independientes</strong>. Cada día que aciertas en Teams, tu balón evoluciona (3, 5, 10, 20, 50, 100, 200 victorias).</p>
+        <p>Cada modo tiene su propia racha <strong>independiente</strong>. Cada día que aciertas, tu balón de ese modo evoluciona (3, 5, 10, 20, 50, 100, 200 victorias).</p>
         <p style="font-size: 0.8rem; color: #888; margin-top: 20px; font-style: italic; border-top: 1px solid #333; padding-top: 12px;">Rondo es un proyecto fan no oficial. Todos los escudos y fotos son propiedad de sus respectivos dueños.</p>
         `,
     en: `
-        <p>There are two modes: <strong>Teams</strong> (guess a team by clues) and <strong>Legends</strong> (guess a player from a blurred photo).</p>
+        <p>There are three modes: <strong>Teams</strong> (guess a team by clues), <strong>Legends</strong> (guess a player from a blurred photo) and <strong>Decade</strong> (order 5 football events chronologically).</p>
         <h3>Teams mode</h3>
         <p>Every day there's a <strong>mystery team</strong> from Europe's top 5 leagues. Type any team name and you'll see 7 clues: <strong>League, Titles, Color, Value, Years in Top, Brand and Stadium</strong>.</p>
         <div class="info-legend">
@@ -237,10 +240,13 @@ const howToPlayContent = {
         </div>
         <h3>Legends mode</h3>
         <p>A blurred photo of a legendary player. You have <strong>10 attempts</strong>. Each miss, the photo gets sharper. After 5 misses you'll see the birth year as extra hint.</p>
+        <h3>Decade mode</h3>
+        <p>Every day there are <strong>5 events</strong> from football history (transfers, trophies, debuts, retirements, awards...). You have to <strong>order them chronologically</strong>, from oldest to newest, by dragging them to the slots.</p>
+        <p>You have <strong>3 attempts</strong>. After each attempt you'll see events in the correct position in green, the close ones in yellow, and the wrong ones in red. Correct guesses stay fixed for the next attempt.</p>
         <h3>Daily mode</h3>
-        <p>Only <strong>one game per day of each mode</strong>. Both change at midnight (local time).</p>
+        <p>Only <strong>one game per day of each mode</strong>. All three change at midnight (local time).</p>
         <h3>Streak</h3>
-        <p>Teams and Legends streaks are <strong>independent</strong>. Each day you win in Teams mode, your ball evolves (3, 5, 10, 20, 50, 100, 200 wins).</p>
+        <p>Each mode has its own <strong>independent</strong> streak. Each day you win, that mode's ball evolves (3, 5, 10, 20, 50, 100, 200 wins).</p>
         <p style="font-size: 0.8rem; color: #888; margin-top: 20px; font-style: italic; border-top: 1px solid #333; padding-top: 12px;">Rondo is an unofficial fan project. All crests and photos belong to their respective owners.</p>
     `
 };
