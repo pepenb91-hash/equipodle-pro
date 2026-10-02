@@ -7,7 +7,14 @@ Juego diario de fútbol estilo Wordle. Bilingüe ES/EN. Vanilla JS + HTML + CSS,
 - `index.html`: estructura de los 3 modos, modales (victoria, stats, level-up, about, info) y banner de cookies
 - `script.js`: toda la lógica (traducciones, datos de equipos y legends, los 3 modos, stats, rachas)
 - `style.css`: estilos. Verde Rondo = `#2ed573`
-- `decade_events.js`: 150 eventos del modo Decade, con `text` y `description` como `{ es, en }`
+- `decade_events.js`: 216 eventos del modo Decade (1950-2026), con `text` y `description` como `{ es, en }`
+- `.claude/serve.ps1` + `.claude/launch.json`: servidor estático local en PowerShell (puerto 8080) para la vista previa, sin instalar nada
+
+## Datos
+
+- Equipos: temporada 2026-27 (96). `budget` = valor de plantilla Transfermarkt en M€; `yearsInFirst` incluye la temporada actual. Al cambiar de temporada, actualizar ascensos/descensos, marcas, estadios, títulos y sumar temporadas.
+- Legends: 88. Fotos solo de Wikimedia Commons, sin el nombre visible en la imagen.
+- Cambiar el número de equipos/leyendas/eventos cambia el reto del día en que se publica.
 
 ## Modos
 
