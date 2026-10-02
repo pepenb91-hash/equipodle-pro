@@ -1406,7 +1406,7 @@ input:focus {
 
     #victory-card { padding: 46px 16px 18px; }
     .confetti-emoji { font-size: 2.2rem; }
-    #victory-card h2 { font-size: 3.2rem; }
+    #victory-card h2 { font-size: min(3.2rem, 12vw); white-space: nowrap; }
     #victory-card p { font-size: 0.85rem; }
     #victory-team { padding: 10px 14px; }
     #victory-team-name { font-size: 1.4rem; }
