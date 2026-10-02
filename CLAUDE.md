@@ -30,6 +30,13 @@ Estilo de retransmisión deportiva: fondo verde oscuro con franjas, tipografías
 - Barra `#news-ticker` fija abajo: titulares de `/api/news` + mensajes fijos `TICKER_MESSAGES`. En local (servidor PowerShell) no hay `/api`, así que solo salen los fijos
 - Maquetas de diseño en `mockups/` (no se sube a GitHub)
 
+## Compartir, retos, idioma y analíticas
+
+- `buildShareText()`: "⚽ RONDO · Teams dd/mm", resultado, racha, cuadrícula y enlace de reto. La cuadrícula se guarda en `lastResult.grid` (`recordGameResult(..., grid)`) para poder compartir tras recargar
+- Enlace de reto `https://playrondo.app/?c=<modo>&s=<intentos|x>`: abre ese modo, muestra `.challenge-banner` y, al terminar, la comparación (`challengeResultHtml`). Se guarda en `sessionStorage` (`rondo_challenge`) y se limpia la URL
+- Idioma: el elegido por el jugador (`localStorage` `rondo_lang`) o el del navegador (`getInitialLang()`)
+- `trackEvent()` → eventos GA4: `game_complete` (mode, won, attempts), `share` (mode, method), `challenge_open` (mode), `news_click` (source)
+
 ## Modos
 
 - **Teams**: adivinar el equipo misterioso del día (96 equipos, 5 grandes ligas) con 7 pistas por categoría. Sin límite de intentos. Los balones del contador aparecen según intentas.
@@ -64,6 +71,6 @@ Cada modo tiene racha independiente con evolución del balón en 3, 5, 10, 20, 5
 
 1. ~~Logo, favicon, iconos, manifest e imagen Open Graph~~ Hecho: logo (R en rótulo verde + punto rojo "en directo"), favicon.ico, `icons/` (16, 32, 180, 192, 512, maskable), manifest.json e `icons/og-image.jpg` (1200x630, con meta og:/twitter: en index.html). Los dibujos están en `icons/logo.html` (`drawChosen` y `drawOG`) por si hay que regenerarlos
 2. SEO: schema.org, sitemap.xml, robots.txt (meta description y Open Graph / Twitter Card ya están)
-3. Analíticas: eventos custom en GA (modo jugado, victorias, shares)
-4. Revisar y optimizar el texto del botón de compartir (que incluya siempre el link)
+3. ~~Analíticas~~ Hecho (ver `trackEvent`). Pendiente: marcar los eventos como "clave" en GA4 si se quieren ver como conversiones
+4. ~~Botón de compartir~~ Hecho: texto nuevo con enlace de reto
 5. Difusión: directorios de Wordle-likes, AlternativeTo, SaaSHub, Indie Hackers, r/SideProject, r/InternetIsBeautiful, Product Hunt (tras tener Open Graph), Show HN, streamers de Twitch, Discord

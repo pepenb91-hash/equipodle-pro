@@ -74,7 +74,22 @@ const i18n = {
         streakLabel: "RACHA",
         replayLabel: "REPETICIÓN",
         hintLabel: "PISTA",
-        resultBannerKey: "FINAL"
+        resultBannerKey: "FINAL",
+        challengeTag: "RETO",
+        challengeTeams: "Tu amigo acertó el equipo de hoy en {n}. ¿Lo mejoras?",
+        challengeLegends: "Tu amigo adivinó la leyenda de hoy en {n}. ¿Lo mejoras?",
+        challengeDecade: "Tu amigo ordenó la historia de hoy en {n}. ¿Lo mejoras?",
+        challengeFailed: "Tu amigo no lo consiguió hoy. ¿Lo logras tú?",
+        challengeVs: "Reto: tu amigo {f} · tú {y}",
+        challengeWin: "¡Ganas el reto!",
+        challengeTie: "Empate",
+        challengeLose: "Gana tu amigo",
+        shareSolved: "✅ {n}",
+        shareFailed: "❌ ¡Al palo!",
+        shareStreak: "🔥 Racha {n}",
+        shareInvite: "¿Lo mejoras? 👉",
+        shareCopied: "¡Copiado! ✓",
+        shareCopyFailed: "No se pudo copiar :("
     },
     en: {
         teamsIntro: "Guess today's mystery team. Each guess will give you clues in every category.",
@@ -150,7 +165,22 @@ const i18n = {
         streakLabel: "STREAK",
         replayLabel: "REPLAY",
         hintLabel: "HINT",
-        resultBannerKey: "FULL TIME"
+        resultBannerKey: "FULL TIME",
+        challengeTag: "CHALLENGE",
+        challengeTeams: "Your friend guessed today's team in {n}. Can you beat it?",
+        challengeLegends: "Your friend guessed today's legend in {n}. Can you beat it?",
+        challengeDecade: "Your friend put today's history in order in {n}. Can you beat it?",
+        challengeFailed: "Your friend didn't get it today. Can you?",
+        challengeVs: "Challenge: your friend {f} · you {y}",
+        challengeWin: "You win the challenge!",
+        challengeTie: "It's a draw",
+        challengeLose: "Your friend wins",
+        shareSolved: "✅ {n}",
+        shareFailed: "❌ Hit the post!",
+        shareStreak: "🔥 Streak {n}",
+        shareInvite: "Can you beat it? 👉",
+        shareCopied: "Copied! ✓",
+        shareCopyFailed: "Couldn't copy :("
     }
 };
 
@@ -209,6 +239,12 @@ function renderTicker() {
     // Se duplica la lista para que el desplazamiento sea continuo
     track.replaceChildren(...items, ...items.map(el => el.cloneNode(true)));
 }
+
+// Analíticas: qué medios interesan (clics en titulares de la barra)
+document.getElementById('ticker-track').addEventListener('click', e => {
+    const link = e.target.closest('a.ticker-item');
+    if (link) trackEvent('news_click', { source: link.querySelector('b').textContent });
+});
 
 async function loadTickerNews() {
     try {
@@ -707,7 +743,14 @@ function saveData(data) {
     }
 }
 
-function recordGameResult(mode, won, attempts, itemName, itemWikiFile) {
+// Evento de Google Analytics (si GA no carga, p. ej. por un bloqueador, no pasa nada)
+function trackEvent(name, params = {}) {
+    if (typeof gtag === 'function') gtag('event', name, params);
+}
+
+// grid: estados de cada intento (para compartir la cuadrícula aunque se recargue la página)
+function recordGameResult(mode, won, attempts, itemName, itemWikiFile, grid = null) {
+    trackEvent('game_complete', { mode, won, attempts });
     const data = loadData();
     const section = data[mode];
     const previousStreak = section.stats.currentStreak;
@@ -727,7 +770,7 @@ function recordGameResult(mode, won, attempts, itemName, itemWikiFile) {
 
     const newTierObj = getTierForStreak(section.stats.currentStreak);
     section.lastPlayed = getTodayKey();
-    section.lastResult = { won, attempts, itemName, itemWikiFile };
+    section.lastResult = { won, attempts, itemName, itemWikiFile, grid };
     saveData(data);
 
     return {
@@ -950,6 +993,17 @@ function fitTextInSquare(squareEl) {
 // ==========  IDIOMA =======================================
 // ==========================================================
 
+const LANG_KEY = 'rondo_lang';
+
+// Idioma inicial: el que eligió el jugador o, si no, el de su navegador/móvil
+function getInitialLang() {
+    try {
+        const saved = localStorage.getItem(LANG_KEY);
+        if (saved === 'es' || saved === 'en') return saved;
+    } catch (e) {}
+    return (navigator.language || '').toLowerCase().startsWith('es') ? 'es' : 'en';
+}
+
 function applyLanguage(lang) {
     currentLang = lang;
     const dict = i18n[lang];
@@ -965,6 +1019,7 @@ function applyLanguage(lang) {
     });
     refreshColorCells();
     renderTicker();
+    renderChallengeBanner();
 
     if (!victoryOverlay.classList.contains('hidden')) {
         const data = loadData();
@@ -1011,7 +1066,10 @@ function refreshColorCells() {
 }
 
 document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
+    btn.addEventListener('click', () => {
+        try { localStorage.setItem(LANG_KEY, btn.dataset.lang); } catch (e) {}
+        applyLanguage(btn.dataset.lang);
+    });
 });
 
 // ==========================================================
@@ -1163,7 +1221,7 @@ async function makeGuess(userTeam) {
     if (userTeam.name === targetTeam.name) {
         gameOver = true;
         input.disabled = true;
-        const result = recordGameResult('teams', true, attemptsCount, targetTeam.name, targetTeam.wikiFile || targetTeam.logoUrl);
+        const result = recordGameResult('teams', true, attemptsCount, targetTeam.name, targetTeam.wikiFile || targetTeam.logoUrl, guessResults);
         updateStreakCapsule();
         launchFireworks();
 
@@ -1482,6 +1540,7 @@ function showDailyResultScreen() {
         emoji.innerText = '🥅';
         message.innerHTML = `<span>${dict.legendsDefeatText}</span>`;
     }
+    message.insertAdjacentHTML('beforeend', challengeResultHtml(won, section.lastResult.attempts));
 
     const victoryTeamDiv = document.getElementById('victory-team');
     victoryTeamDiv.innerHTML = '';
@@ -1647,84 +1706,157 @@ infoOverlay.addEventListener('click', (e) => {
 // ==========  COMPARTIR RESULTADO (con Rondo + playrondo.app)
 // ==========================================================
 
+const SHARE_URL = 'https://playrondo.app/';
+const MODE_EMOJI = { teams: '⚽', legends: '⭐', decade: '📅' };
+
+// "4 intentos" / "1 intento"
+function attemptsLabel(n) {
+    const dict = i18n[currentLang];
+    return `${n} ${n === 1 ? dict.decadeAttemptWord : dict.decadeAttemptsWord}`;
+}
+
+// Enlace de reto: quien lo abre ve "Tu amigo lo sacó en N, ¿lo mejoras?"
+function buildChallengeUrl(mode, won, attempts) {
+    return `${SHARE_URL}?c=${mode}&s=${won ? attempts : 'x'}`;
+}
+
 function buildShareText() {
     const data = loadData();
     const section = data[currentMode];
-    const attempts = section.lastResult ? section.lastResult.attempts : 0;
+    const dict = i18n[currentLang];
+    const result = section.lastResult || {};
+    const attempts = result.attempts || 0;
+    const won = !!result.won;
     const streak = section.stats.currentStreak;
-    const won = section.lastResult ? section.lastResult.won : false;
 
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0');
 
     const emojiMap = { 'correct': '🟩', 'partial': '🟨', 'wrong': '🟥' };
-
-    let txt;
+    // La cuadrícula guardada con el resultado; si no existe (partidas antiguas), la de esta sesión
+    let grid = '';
     if (currentMode === 'teams') {
-        const grid = guessResults.map(row => row.map(s => emojiMap[s] || '⬜').join('')).join('\n');
-        const attemptsWordEs = attempts === 1 ? 'intento' : 'intentos';
-        const attemptsWordEn = attempts === 1 ? 'try' : 'tries';
-
-        txt = currentLang === 'es'
-            ? `⚽ Rondo · Teams — ${dd}/${mm} ⚽\nAdivinado en ${attempts} ${attemptsWordEs} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: playrondo.app`
-            : `⚽ Rondo · Teams — ${dd}/${mm} ⚽\nGuessed in ${attempts} ${attemptsWordEn} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: playrondo.app`;
+        const rows = result.grid || guessResults;
+        grid = rows.map(row => row.map(s => emojiMap[s] || '⬜').join('')).join('\n');
     } else if (currentMode === 'legends') {
-        let grid = '';
         for (let i = 0; i < LEGEND_MAX_ATTEMPTS; i++) {
             if (i < attempts - 1) grid += '🟥';
-            else if (i === attempts - 1 && won) grid += '🟩';
-            else if (i === attempts - 1 && !won) grid += '🟥';
+            else if (i === attempts - 1) grid += won ? '🟩' : '🟥';
             else grid += '⬜';
         }
-        txt = currentLang === 'es'
-            ? `⭐ Rondo · Legends — ${dd}/${mm} ⭐\n${won ? 'Adivinado' : 'Fallido'} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: playrondo.app`
-            : `⭐ Rondo · Legends — ${dd}/${mm} ⭐\n${won ? 'Guessed' : 'Failed'} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: playrondo.app`;
     } else if (currentMode === 'decade') {
-        // Cada intento es una línea de 5 emojis (verde/rojo)
-        const grid = decadeAttemptHistory.map(attempt =>
-            attempt.map(s => s === 'correct' ? '🟩' : '🟥').join('')
-        ).join('\n');
-
-        const attemptsWordEs = attempts === 1 ? 'intento' : 'intentos';
-        const attemptsWordEn = attempts === 1 ? 'try' : 'tries';
-
-        txt = currentLang === 'es'
-            ? `📅 Rondo · Decade — ${dd}/${mm} 📅\n${won ? `Acertado en ${attempts} ${attemptsWordEs}` : 'Fallido'} · Racha: ${streak} 🔥\n\n${grid}\n\nJuega en: playrondo.app`
-            : `📅 Rondo · Decade — ${dd}/${mm} 📅\n${won ? `Solved in ${attempts} ${attemptsWordEn}` : 'Failed'} · Streak: ${streak} 🔥\n\n${grid}\n\nPlay at: playrondo.app`;
+        const rows = result.grid || decadeAttemptHistory;
+        grid = rows.map(attempt => attempt.map(s => s === 'correct' ? '🟩' : '🟥').join('')).join('\n');
     }
 
-    return txt;
+    const modeName = dict['mode' + currentMode.charAt(0).toUpperCase() + currentMode.slice(1)];
+    const outcome = won ? dict.shareSolved.replace('{n}', attemptsLabel(attempts)) : dict.shareFailed;
+    const streakTxt = streak > 0 ? ' · ' + dict.shareStreak.replace('{n}', streak) : '';
+
+    return `${MODE_EMOJI[currentMode]} RONDO · ${modeName} ${dd}/${mm}\n` +
+        `${outcome}${streakTxt}\n\n` +
+        (grid ? `${grid}\n\n` : '') +
+        `${dict.shareInvite} ${buildChallengeUrl(currentMode, won, attempts)}`;
 }
 
 async function shareResult() {
     const text = buildShareText();
     const shareBtn = document.getElementById('share-result-btn');
+    const dict = i18n[currentLang];
 
+    // Móvil: menú nativo de compartir (WhatsApp, Telegram...)
     if (navigator.share) {
         try {
-            await navigator.share({ title: 'Rondo', text: text });
+            await navigator.share({ text });
+            trackEvent('share', { mode: currentMode, method: 'native' });
             return;
         } catch (err) {
-            // usuario canceló
+            if (err && err.name === 'AbortError') return; // el usuario cerró el menú
         }
     }
 
+    // Ordenador: copiar al portapapeles
     try {
         await navigator.clipboard.writeText(text);
+        trackEvent('share', { mode: currentMode, method: 'clipboard' });
         const originalText = shareBtn.innerText;
-        shareBtn.innerText = currentLang === 'es' ? '¡Copiado! ✓' : 'Copied! ✓';
+        shareBtn.innerText = dict.shareCopied;
         shareBtn.classList.add('copied');
         setTimeout(() => {
             shareBtn.innerText = originalText;
             shareBtn.classList.remove('copied');
         }, 2000);
     } catch (err) {
-        alert(currentLang === 'es' ? 'No se pudo copiar :(' : "Couldn't copy :(");
+        alert(dict.shareCopyFailed);
     }
 }
 
 document.getElementById('share-result-btn').addEventListener('click', shareResult);
+
+// ==========================================================
+// ==========  RETOS ENTRE AMIGOS (?c=modo&s=intentos) =======
+// ==========================================================
+
+const CHALLENGE_KEY = 'rondo_challenge';
+// Lee el reto del enlace (y lo guarda para la sesión) o el de la sesión actual
+function getChallenge() {
+    // Máximo de intentos válido por modo (Teams no tiene límite)
+    const maxAttempts = { teams: 99, legends: LEGEND_MAX_ATTEMPTS, decade: DECADE_MAX_ATTEMPTS };
+    const params = new URLSearchParams(location.search);
+    const mode = params.get('c');
+    const score = params.get('s');
+    if (mode in maxAttempts && score) {
+        const n = parseInt(score, 10);
+        const challenge = score === 'x'
+            ? { mode, won: false, attempts: null }
+            : (n >= 1 && n <= maxAttempts[mode] ? { mode, won: true, attempts: n } : null);
+        if (challenge) {
+            try { sessionStorage.setItem(CHALLENGE_KEY, JSON.stringify(challenge)); } catch (e) {}
+            // Quitar los parámetros de la barra de direcciones
+            history.replaceState(null, '', location.pathname);
+            trackEvent('challenge_open', { mode });
+            return challenge;
+        }
+    }
+    try { return JSON.parse(sessionStorage.getItem(CHALLENGE_KEY)); } catch (e) { return null; }
+}
+
+function renderChallengeBanner() {
+    document.querySelectorAll('.challenge-banner').forEach(el => el.remove());
+    const challenge = getChallenge();
+    if (!challenge) return;
+    const dict = i18n[currentLang];
+    const key = 'challenge' + challenge.mode.charAt(0).toUpperCase() + challenge.mode.slice(1);
+    const msg = challenge.won ? dict[key].replace('{n}', attemptsLabel(challenge.attempts)) : dict.challengeFailed;
+
+    const banner = document.createElement('div');
+    banner.className = 'challenge-banner';
+    const tag = document.createElement('span');
+    tag.className = 'challenge-tag';
+    tag.textContent = '🎯 ' + dict.challengeTag;
+    const text = document.createElement('span');
+    text.className = 'challenge-text';
+    text.textContent = msg;
+    banner.append(tag, text);
+
+    const section = { teams: teamsContainer, legends: legendsContainer, decade: decadeContainer }[challenge.mode];
+    section.querySelector('.score-row').after(banner);
+}
+
+// Línea de comparación en la pantalla de resultado: "Reto: tu amigo 4 · tú 3 — ¡Ganas el reto!"
+function challengeResultHtml(won, attempts) {
+    const challenge = getChallenge();
+    if (!challenge || challenge.mode !== currentMode) return '';
+    const dict = i18n[currentLang];
+    const fmt = (w, n) => (w ? attemptsLabel(n) : '❌');
+    // Fallar cuenta como peor que cualquier acierto
+    const score = (w, n) => (w ? n : Infinity);
+    const mine = score(won, attempts), theirs = score(challenge.won, challenge.attempts);
+    const verdict = mine < theirs ? dict.challengeWin : mine === theirs ? dict.challengeTie : dict.challengeLose;
+    const vs = dict.challengeVs.replace('{f}', fmt(challenge.won, challenge.attempts)).replace('{y}', fmt(won, attempts));
+    return `<span class="challenge-result">🎯 ${vs} — <strong>${verdict}</strong></span>`;
+}
 
 // ==========================================================
 // ==========  FUEGOS ARTIFICIALES ==========================
@@ -1768,7 +1900,7 @@ function init() {
     updateLegendBlur();
     updateLegendAttemptsUI();
 
-    applyLanguage('en');
+    applyLanguage(getInitialLang());
     loadTickerNews();
 
     const data = loadData();
@@ -1798,6 +1930,10 @@ function init() {
         for (let i = 0; i <= 10; i++) legendPhoto.classList.remove(`blur-${i}`);
         legendPhoto.classList.add('blur-0');
     }
+
+    // Si se llega desde un enlace de reto, abrir directamente ese modo
+    const challenge = getChallenge();
+    if (challenge && challenge.mode !== currentMode) switchMode(challenge.mode);
 }
 
 // ==========================================================
@@ -2280,7 +2416,8 @@ function finishDecadeGame(won) {
         won,
         decadeAttemptsCount,
         'decade-' + getTodayKey(),  // identificador del día
-        null
+        null,
+        decadeAttemptHistory
     );
     updateStreakCapsule();
 
@@ -2361,6 +2498,7 @@ function showDecadeResultScreen() {
         emoji.innerText = '🥅';
         message.innerHTML = `<span>${dict.decadeDefeatText}</span>`;
     }
+    message.insertAdjacentHTML('beforeend', challengeResultHtml(won, section.lastResult.attempts));
 
     // Mostrar el orden correcto con descripciones educativas
     const victoryTeamDiv = document.getElementById('victory-team');

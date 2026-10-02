@@ -355,6 +355,51 @@ h1 {
     50% { transform: translateY(-3px); }
 }
 
+/* ---------- Rótulo de reto (enlace compartido por un amigo) ---------- */
+.challenge-banner {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    max-width: 500px;
+    margin: -4px 0 16px;
+    background: rgba(255, 210, 63, 0.12);
+    border-left: 4px solid #ffd23f;
+    box-sizing: border-box;
+    animation: hintIn 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+.challenge-tag {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    background: #ffd23f;
+    color: #2b1d00;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    padding: 4px 12px 0 8px;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+.challenge-text {
+    padding: 9px 12px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #fff3c4;
+    line-height: 1.35;
+}
+.challenge-result {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: rgba(255, 210, 63, 0.12);
+    border-left: 3px solid #ffd23f;
+    color: #fff3c4;
+    font-size: 0.88rem;
+    text-align: left;
+}
+.challenge-result strong { color: #ffd23f; }
+
 /* ---------- Marcador: "EN DIRECTO" + contador de intentos/vidas ---------- */
 .score-row {
     display: grid;
