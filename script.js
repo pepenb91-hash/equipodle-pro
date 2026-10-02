@@ -2,7 +2,7 @@
 const i18n = {
     es: {
         teamsIntro: "Adivina el equipo misterioso del día. Cada intento te dará pistas en cada categoría.",
-        attemptsTitle: "Número de intentos",
+        attemptsTitle: "Intentos",
         inputPlaceholder: "Escribe el nombre de un equipo...",
         colLeague: "Liga",
         colTitles: "Títulos",
@@ -11,10 +11,10 @@ const i18n = {
         colYears: "Años en 1ª",
         colBrand: "Marca",
         colStadium: "Estadio",
-        victoryTitle: "¡Victoria!",
+        victoryTitle: "¡GOLAZO!",
         victoryTextBefore: "Has adivinado el equipo en",
         victoryTextAfter: "intentos",
-        nextGameIn: "Próximo equipo en",
+        nextGameIn: "Próximo partido en",
         statsTitle: "Estadísticas",
         statPlayed: "Partidas",
         statWins: "Victorias",
@@ -42,9 +42,9 @@ const i18n = {
         legendsOf: "de",
         hintBornIn: "Nacido en",
         legendsVictoryText: "Has adivinado al jugador en",
-        legendsDefeatTitle: "¡Qué pena!",
+        legendsDefeatTitle: "¡AL PALO!",
         legendsDefeatText: "El jugador era:",
-        legendsColLeft: "Intentos restantes",
+        legendsColLeft: "Vidas",
         statsTeams: "Teams",
         statsLegends: "Legends",
         coffeeBtn: "Invítame a un café",
@@ -54,23 +54,31 @@ const i18n = {
         cookieText: "Usamos cookies para entender cómo se usa Rondo. Sin datos personales, sin anuncios.",
         cookieAccept: "Entendido",
         modeDecade: "Decade",
-        decadeAttemptsLabel: "Intentos restantes",
+        decadeAttemptsLabel: "Vidas",
         decadeInstructions: "Arrastra los eventos de más antiguo a más reciente",
         decadePoolLabel: "Eventos disponibles",
         decadeSlotsLabel: "Orden cronológico",
         decadeOldest: "MÁS ANTIGUO",
         decadeNewest: "MÁS RECIENTE",
-        decadeSubmit: "Enviar respuesta",
-        decadeVictoryTitle: "¡Bien hecho!",
+        decadeSubmit: "Comprobar",
+        decadeVictoryTitle: "¡GOLAZO!",
         decadeVictoryText: "Has acertado el orden en",
-        decadeDefeatTitle: "Casi...",
+        decadeDefeatTitle: "¡AL PALO!",
         decadeDefeatText: "Se acabaron los intentos. Este era el orden correcto:",
         decadeAttemptWord: "intento",
-        decadeAttemptsWord: "intentos"
+        decadeAttemptsWord: "intentos",
+        subTeams: "Equipo misterioso del día",
+        subLegends: "Leyenda del día",
+        subDecade: "Ordena la historia",
+        liveBadge: "EN DIRECTO",
+        streakLabel: "RACHA",
+        replayLabel: "REPETICIÓN",
+        hintLabel: "PISTA",
+        resultBannerKey: "FINAL"
     },
     en: {
         teamsIntro: "Guess today's mystery team. Each guess will give you clues in every category.",
-        attemptsTitle: "Number of attempts",
+        attemptsTitle: "Attempts",
         inputPlaceholder: "Type a team name...",
         colLeague: "League",
         colTitles: "Titles",
@@ -79,10 +87,10 @@ const i18n = {
         colYears: "Years in Top",
         colBrand: "Brand",
         colStadium: "Stadium",
-        victoryTitle: "Victory!",
+        victoryTitle: "GOLAZO!",
         victoryTextBefore: "You guessed the team in",
         victoryTextAfter: "attempts",
-        nextGameIn: "Next team in",
+        nextGameIn: "Next match in",
         statsTitle: "Statistics",
         statPlayed: "Played",
         statWins: "Wins",
@@ -110,9 +118,9 @@ const i18n = {
         legendsOf: "of",
         hintBornIn: "Born in",
         legendsVictoryText: "You guessed the player in",
-        legendsDefeatTitle: "So close!",
+        legendsDefeatTitle: "OFF THE POST!",
         legendsDefeatText: "The player was:",
-        legendsColLeft: "Attempts left",
+        legendsColLeft: "Lives",
         statsTeams: "Teams",
         statsLegends: "Legends",
         coffeeBtn: "Buy me a coffee",
@@ -122,21 +130,99 @@ const i18n = {
         cookieText: "We use cookies to understand how Rondo is used. No personal data, no ads.",
         cookieAccept: "Got it",
         modeDecade: "Decade",
-        decadeAttemptsLabel: "Attempts left",
+        decadeAttemptsLabel: "Lives",
         decadeInstructions: "Drag the events from oldest to newest",
         decadePoolLabel: "Available events",
         decadeSlotsLabel: "Chronological order",
         decadeOldest: "OLDEST",
         decadeNewest: "NEWEST",
-        decadeSubmit: "Submit answer",
-        decadeVictoryTitle: "Well done!",
+        decadeSubmit: "Check",
+        decadeVictoryTitle: "GOLAZO!",
         decadeVictoryText: "You guessed the order in",
-        decadeDefeatTitle: "Almost...",
+        decadeDefeatTitle: "OFF THE POST!",
         decadeDefeatText: "Out of attempts. This was the correct order:",
         decadeAttemptWord: "attempt",
-        decadeAttemptsWord: "attempts"
+        decadeAttemptsWord: "attempts",
+        subTeams: "Today's mystery team",
+        subLegends: "Legend of the day",
+        subDecade: "Put history in order",
+        liveBadge: "LIVE",
+        streakLabel: "STREAK",
+        replayLabel: "REPLAY",
+        hintLabel: "HINT",
+        resultBannerKey: "FULL TIME"
     }
 };
+
+// Mensajes fijos de la barra "RONDO TV": se muestran si no llegan noticias reales
+// (en local, o si falla /api/news) y se intercalan entre los titulares
+const TICKER_MESSAGES = {
+    es: [
+        ['TEMPORADA 26-27', 'Los 96 equipos de las 5 grandes ligas, actualizados'],
+        ['DECADE', '216 momentos de la historia del fútbol, de 1950 a 2026'],
+        ['LEGENDS', '88 leyendas: ¿las reconoces a todas?'],
+        ['RACHA', 'Tu balón evoluciona a las 3, 5, 10, 20, 50, 100 y 200 victorias'],
+        ['CADA DÍA', 'Nuevo reto en los 3 modos a medianoche']
+    ],
+    en: [
+        ['SEASON 26-27', 'All 96 teams from the top 5 leagues, up to date'],
+        ['DECADE', '216 moments of football history, from 1950 to 2026'],
+        ['LEGENDS', '88 legends: can you recognise them all?'],
+        ['STREAK', 'Your ball evolves at 3, 5, 10, 20, 50, 100 and 200 wins'],
+        ['EVERY DAY', 'A new challenge in all 3 modes at midnight']
+    ]
+};
+
+// Titulares reales de /api/news (función de Vercel); null hasta que lleguen
+let tickerNews = null;
+
+function createTickerItem(tag, text, link) {
+    const el = document.createElement(link ? 'a' : 'span');
+    el.className = 'ticker-item';
+    if (link) {
+        el.href = link;
+        el.target = '_blank';
+        el.rel = 'noopener';
+    }
+    const b = document.createElement('b');
+    b.textContent = tag;
+    el.append(b, ' ' + text);
+    return el;
+}
+
+function renderTicker() {
+    const track = document.getElementById('ticker-track');
+    if (!track) return;
+    const fixed = TICKER_MESSAGES[currentLang].map(([tag, text]) => createTickerItem(tag, text));
+    const news = (tickerNews && tickerNews[currentLang]) || [];
+    let items = fixed;
+    if (news.length > 0) {
+        // Un mensaje de Rondo cada 4 titulares
+        items = [];
+        news.forEach((n, i) => {
+            items.push(createTickerItem(n.source, n.title, n.link));
+            if (i % 4 === 3) items.push(fixed[(i >> 2) % fixed.length]);
+        });
+        // Más titulares = más texto: velocidad de lectura constante
+        track.style.animationDuration = Math.max(40, items.length * 9) + 's';
+    }
+    // Se duplica la lista para que el desplazamiento sea continuo
+    track.replaceChildren(...items, ...items.map(el => el.cloneNode(true)));
+}
+
+async function loadTickerNews() {
+    try {
+        const res = await fetch('/api/news');
+        if (!res.ok) return;
+        const data = await res.json();
+        if ((data.es && data.es.length) || (data.en && data.en.length)) {
+            tickerNews = data;
+            renderTicker();
+        }
+    } catch {
+        // Sin noticias (p. ej. en local): se quedan los mensajes fijos
+    }
+}
 
 const colorTranslations = {
     "Blanco":       { es: "Blanco",        en: "White" },
@@ -327,7 +413,7 @@ const teams = [
     { name: "Sevilla FC", slug: "sevilla", wikiFile: "Sevilla_FC_logo.svg", league: "LaLiga", titles: 15, kitColor: "Blanco", budget: 169, yearsInFirst: 82, brand: "Adidas", capacity: 43883 },
     { name: "Real Sociedad", slug: "real-sociedad", wikiFile: "Real_Sociedad_logo.svg", league: "LaLiga", titles: 7, kitColor: "Blanquiazul", budget: 278, yearsInFirst: 79, brand: "Joma", capacity: 39500 },
     { name: "Athletic Club", slug: "athletic-bilbao", wikiFile: "Club_Athletic_Bilbao_logo.svg", league: "LaLiga", titles: 35, kitColor: "Rojiblanco", budget: 233, yearsInFirst: 95, brand: "Castore", capacity: 53289 },
-    { name: "Real Betis", slug: "real-betis", wikiFile: "Real_betis_logo.svg", league: "LaLiga", titles: 4, kitColor: "Verdiblanco", budget: 255, yearsInFirst: 60, brand: "Hummel", capacity: 70000 },
+    { name: "Real Betis", slug: "real-betis", logoUrl: "https://tmssl.akamaized.net/images/wappen/head/150.png", league: "LaLiga", titles: 4, kitColor: "Verdiblanco", budget: 255, yearsInFirst: 60, brand: "Hummel", capacity: 70000 },
     { name: "Villarreal CF", slug: "villarreal", wikiFile: "Villarreal_CF_logo-en.svg", league: "LaLiga", titles: 1, kitColor: "Amarillo", budget: 332, yearsInFirst: 27, brand: "Joma", capacity: 23500 },
     { name: "Valencia CF", slug: "valencia", wikiFile: "Valenciacf.svg", league: "LaLiga", titles: 23, kitColor: "Blanquinegro", budget: 149, yearsInFirst: 91, brand: "Puma", capacity: 49430 },
     { name: "Osasuna", slug: "osasuna", wikiFile: "Osasuna_logo.svg", league: "LaLiga", titles: 0, kitColor: "Rojo", budget: 78, yearsInFirst: 44, brand: "Macron", capacity: 23576 },
@@ -352,7 +438,7 @@ const teams = [
     { name: "Aston Villa", slug: "aston-villa", wikiFile: "Aston_Villa_FC_new_crest.svg", league: "Premier", titles: 25, kitColor: "Granate", budget: 572, yearsInFirst: 113, brand: "Adidas", capacity: 36887 },
     { name: "Newcastle", slug: "newcastle", wikiFile: "Newcastle_United_Logo.svg", league: "Premier", titles: 14, kitColor: "Blanquinegro", budget: 606, yearsInFirst: 95, brand: "Adidas", capacity: 52305 },
     { name: "Everton", slug: "everton", wikiFile: "Everton_FC_logo.svg", league: "Premier", titles: 24, kitColor: "Azul", budget: 394, yearsInFirst: 124, brand: "Castore", capacity: 52769 },
-    { name: "Brighton", slug: "brighton", wikiFile: "Brighton_&_Hove_Albion_logo.svg", league: "Premier", titles: 0, kitColor: "Blanquiazul", budget: 604, yearsInFirst: 13, brand: "Nike", capacity: 31800 },
+    { name: "Brighton", slug: "brighton", logoUrl: "https://tmssl.akamaized.net/images/wappen/head/1237.png", league: "Premier", titles: 0, kitColor: "Blanquiazul", budget: 604, yearsInFirst: 13, brand: "Nike", capacity: 31800 },
     { name: "Fulham", slug: "fulham", wikiFile: "Fulham_FC_(shield).svg", league: "Premier", titles: 0, kitColor: "Blanco", budget: 397, yearsInFirst: 31, brand: "Adidas", capacity: 28107 },
     { name: "Crystal Palace", slug: "crystal-palace", wikiFile: "Crystal_Palace_FC_logo_(2022).svg", league: "Premier", titles: 0, kitColor: "Azulgrana", budget: 579, yearsInFirst: 27, brand: "Macron", capacity: 25486 },
     { name: "Bournemouth", slug: "bournemouth", wikiFile: "AFC_Bournemouth_(2013).svg", league: "Premier", titles: 0, kitColor: "Rojinegro", budget: 575, yearsInFirst: 10, brand: "Hummel", capacity: 11307 },
@@ -682,7 +768,7 @@ const PARTIAL_THRESHOLDS = {
     yearsInFirst: 10,
     capacity: 10000
 };
-const REVEAL_DELAY = 500;
+const REVEAL_DELAY = 350;
 
 // ==========================================================
 // ==========  REFERENCIAS DOM ==============================
@@ -742,6 +828,11 @@ function updateStreakCapsule() {
 
     if (tierObj.tier >= 3) streakCapsule.classList.add('tier-high');
     else streakCapsule.classList.remove('tier-high');
+
+    // ✓ en las pestañas de los modos ya jugados hoy
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.toggle('played-today', data[btn.dataset.mode].lastPlayed === getTodayKey());
+    });
 }
 
 // ==========================================================
@@ -845,7 +936,8 @@ function colorsShareBase(a, b) {
 function fitTextInSquare(squareEl) {
     const valueEl = squareEl.querySelector('.square-value');
     if (!valueEl) return;
-    const sizes = [0.95, 0.85, 0.75, 0.68, 0.6];
+    // Tamaños pensados para la tipografía Teko
+    const sizes = [1.3, 1.15, 1.0, 0.9, 0.8, 0.7, 0.62];
     let i = 0;
     valueEl.style.fontSize = sizes[i] + 'rem';
     while (i < sizes.length - 1 && valueEl.scrollWidth > squareEl.clientWidth - 6) {
@@ -872,6 +964,7 @@ function applyLanguage(lang) {
         btn.classList.toggle('active', btn.dataset.lang === lang);
     });
     refreshColorCells();
+    renderTicker();
 
     if (!victoryOverlay.classList.contains('hidden')) {
         const data = loadData();
@@ -1240,7 +1333,7 @@ function makeLegendGuess(userLegend) {
 
     const row = document.createElement('div');
     row.className = 'legend-guess-row';
-    row.innerText = `❌ ${userLegend.name}`;
+    row.innerText = `✗ ${userLegend.name}`;
     legendGuessesContainer.prepend(row);
 
     updateLegendBlur();
@@ -1350,6 +1443,14 @@ levelupCloseBtn.addEventListener('click', () => {
     showDailyResultScreen();
 });
 
+// Rótulo "FINAL | TEAMS · 2 OCT" de la pantalla de resultado
+function setResultBanner() {
+    const dict = i18n[currentLang];
+    const modeKey = 'mode' + currentMode.charAt(0).toUpperCase() + currentMode.slice(1);
+    const date = new Date().toLocaleDateString(currentLang, { day: 'numeric', month: 'short' }).replace('.', '');
+    document.getElementById('result-banner-value').innerText = `${dict[modeKey]} · ${date}`;
+}
+
 function showDailyResultScreen() {
     const data = loadData();
     const section = data[currentMode];
@@ -1362,6 +1463,8 @@ function showDailyResultScreen() {
     const dict = i18n[currentLang];
 
     card.classList.remove('defeat');
+    setResultBanner();
+    document.querySelector('.countdown-label').innerText = dict.nextGameIn;
     const won = section.lastResult.won;
 
     if (won) {
@@ -1376,12 +1479,13 @@ function showDailyResultScreen() {
     } else {
         card.classList.add('defeat');
         heading.innerText = dict.legendsDefeatTitle;
-        emoji.innerText = '😢';
+        emoji.innerText = '🥅';
         message.innerHTML = `<span>${dict.legendsDefeatText}</span>`;
     }
 
     const victoryTeamDiv = document.getElementById('victory-team');
     victoryTeamDiv.innerHTML = '';
+    victoryTeamDiv.removeAttribute('style'); // por si antes se mostró el resultado de Decade
 
     if (currentMode === 'teams') {
         const lastTeam = teams.find(t => t.name === section.lastResult.itemName) || {
@@ -1401,6 +1505,17 @@ function showDailyResultScreen() {
         initials.className = 'shield-fallback';
         initials.style.display = 'flex';
         initials.innerText = getInitials(section.lastResult.itemName);
+        // Foto de la leyenda (ya sin desenfocar); si no carga, quedan las iniciales
+        const legend = legends.find(l => l.name === section.lastResult.itemName);
+        if (legend) {
+            const photo = document.createElement('img');
+            photo.className = 'victory-legend-photo';
+            photo.alt = legend.name;
+            photo.src = legend.photoUrl;
+            photo.onload = () => { initials.style.display = 'none'; };
+            photo.onerror = () => photo.remove();
+            avatar.appendChild(photo);
+        }
         avatar.appendChild(initials);
         const nameSpan = document.createElement('span');
         nameSpan.id = 'victory-team-name';
@@ -1654,6 +1769,7 @@ function init() {
     updateLegendAttemptsUI();
 
     applyLanguage('en');
+    loadTickerNews();
 
     const data = loadData();
     updateStreakCapsule();
@@ -2225,6 +2341,7 @@ function showDecadeResultScreen() {
     const dict = i18n[currentLang];
 
     card.classList.remove('defeat');
+    setResultBanner();
     const won = section.lastResult.won;
 
     if (won) {
@@ -2241,7 +2358,7 @@ function showDecadeResultScreen() {
     } else {
         card.classList.add('defeat');
         heading.innerText = dict.decadeDefeatTitle;
-        emoji.innerText = '😢';
+        emoji.innerText = '🥅';
         message.innerHTML = `<span>${dict.decadeDefeatText}</span>`;
     }
 
@@ -2273,12 +2390,7 @@ function showDecadeResultScreen() {
 
     renderMiniStats(section.stats);
     startCountdown();
-
-    // Cambiar texto del countdown
-    const countdownLabel = document.querySelector('.countdown-label');
-    if (countdownLabel) {
-        countdownLabel.innerText = currentLang === 'es' ? 'Próximo Decade en' : 'Next Decade in';
-    }
+    document.querySelector('.countdown-label').innerText = dict.nextGameIn;
 
     victoryOverlay.classList.remove('hidden');
 }

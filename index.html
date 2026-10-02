@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rondo — The daily football guessing game</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=20261002">
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FS0NJZW97X"></script>
@@ -18,42 +21,50 @@
     </script>
 </head>
 <body>
-    <!-- Barra superior -->
-    <div id="top-bar">
-        <button id="info-btn" title="How to play">ℹ️</button>
-        <button id="stats-btn" title="Statistics">📊</button>
-
-        <!-- Cápsula de racha -->
-        <div id="streak-capsule" title="Win streak">
-            <div id="streak-ball-wrapper">
-                <div id="streak-aura"></div>
-                <span id="streak-ball">🏐</span>
-                <span id="streak-extra"></span>
+    <header id="app-header">
+        <!-- Barra superior: idioma a la izquierda; racha, normas y estadísticas a la derecha -->
+        <div id="top-bar">
+            <div id="lang-switcher">
+                <button class="lang-btn" data-lang="es" title="Español">🇪🇸</button>
+                <button class="lang-btn active" data-lang="en" title="English">🇬🇧</button>
             </div>
-            <span id="streak-count">0</span>
+
+            <div class="top-bar-right">
+                <!-- Cápsula de racha -->
+                <div id="streak-capsule" title="Win streak">
+                    <div id="streak-ball-wrapper">
+                        <div id="streak-aura"></div>
+                        <span id="streak-ball">🏐</span>
+                        <span id="streak-extra"></span>
+                    </div>
+                    <span id="streak-count">0</span>
+                    <span class="streak-label" data-i18n="streakLabel">STREAK</span>
+                </div>
+
+                <button id="info-btn" title="How to play">❔</button>
+                <button id="stats-btn" title="Statistics">📊</button>
+            </div>
         </div>
 
-        <div id="lang-switcher">
-            <button class="lang-btn" data-lang="es" title="Español">🇪🇸</button>
-            <button class="lang-btn active" data-lang="en" title="English">🇬🇧</button>
-        </div>
-    </div>
-
-    <!-- Selector de modo: Teams / Legends -->
-    <div id="mode-switcher">
-        <button class="mode-btn active" data-mode="teams" data-i18n="modeTeams">Teams</button>
-        <button class="mode-btn" data-mode="legends" data-i18n="modeLegends">Legends</button>
-        <button class="mode-btn" data-mode="decade" data-i18n="modeDecade">Decade</button>
-    </div>
+        <!-- Selector de modo: Teams / Legends / Decade (icono y ✓ por CSS) -->
+        <nav id="mode-switcher">
+            <button class="mode-btn active" data-mode="teams" data-i18n="modeTeams">Teams</button>
+            <button class="mode-btn" data-mode="legends" data-i18n="modeLegends">Legends</button>
+            <button class="mode-btn" data-mode="decade" data-i18n="modeDecade">Decade</button>
+        </nav>
+    </header>
 
     <!-- ========== MODO TEAMS ========== -->
     <div id="game-container" class="mode-section">
-        <h1 class="mode-title">Rondo <span>· Teams</span></h1>
+        <h1 class="brand"><span class="brand-logo">RON<b>DO</b></span><span class="brand-sub" data-i18n="subTeams">Today's mystery team</span></h1>
 
-        <div id="attempts-counter">
-            <div class="attempts-title" data-i18n="attemptsTitle">Number of attempts</div>
-            <div id="attempts-number">0</div>
-            <div id="attempts-balls"></div>
+        <div class="score-row">
+            <div class="live-badge" data-i18n="liveBadge">LIVE</div>
+            <div id="attempts-counter">
+                <div class="attempts-title" data-i18n="attemptsTitle">Attempts</div>
+                <div id="attempts-number">0</div>
+            </div>
+            <div id="attempts-balls" class="lives-row"></div>
         </div>
 
         <div class="search-box">
@@ -86,26 +97,32 @@
 
     <!-- ========== MODO LEGENDS ========== -->
     <div id="legends-container" class="mode-section hidden">
-        <h1 class="mode-title">Rondo <span>· Legends</span></h1>
+        <h1 class="brand"><span class="brand-logo">RON<b>DO</b></span><span class="brand-sub" data-i18n="subLegends">Legend of the day</span></h1>
 
-        <div id="legends-attempts-counter">
-            <div class="attempts-title" data-i18n="legendsColLeft">Attempts left</div>
-            <div id="legends-attempts-number">10</div>
-            <div id="legends-attempts-balls"></div>
+        <div class="score-row">
+            <div class="live-badge" data-i18n="liveBadge">LIVE</div>
+            <div id="legends-attempts-counter">
+                <div class="attempts-title" data-i18n="legendsColLeft">Lives</div>
+                <div id="legends-attempts-number">10</div>
+            </div>
+            <div id="legends-attempts-balls" class="lives-row"></div>
         </div>
 
-        <!-- Foto con blur progresivo -->
+        <!-- Foto con blur progresivo, enmarcada como una repetición de TV -->
         <div id="legend-photo-wrapper">
             <div id="legend-photo-placeholder">
                 <span id="legend-photo-initials">?</span>
             </div>
             <img id="legend-photo" alt="Daily legend">
-        </div>
+            <span class="cam-corner tl"></span><span class="cam-corner tr"></span>
+            <span class="cam-corner bl"></span><span class="cam-corner br"></span>
+            <div class="replay-label" data-i18n="replayLabel">REPLAY</div>
 
-        <!-- Pista opcional (año de nacimiento) -->
-        <div id="legend-hint" class="hidden">
-            <span data-i18n="hintBornIn">Born in</span>
-            <span id="legend-hint-year">----</span>
+            <!-- Pista opcional (año de nacimiento) como rótulo inferior -->
+            <div id="legend-hint" class="hidden">
+                <span class="hint-key" data-i18n="hintLabel">HINT</span>
+                <span class="hint-value"><span data-i18n="hintBornIn">Born in</span> <span id="legend-hint-year">----</span></span>
+            </div>
         </div>
 
         <div class="search-box">
@@ -119,12 +136,15 @@
 
     <!-- ========== MODO DECADE ========== -->
     <div id="decade-container" class="mode-section hidden">
-        <h1 class="mode-title">Rondo <span>· Decade</span></h1>
+        <h1 class="brand"><span class="brand-logo">RON<b>DO</b></span><span class="brand-sub" data-i18n="subDecade">Put history in order</span></h1>
 
-        <div id="decade-attempts-counter">
-            <div class="attempts-title" data-i18n="decadeAttemptsLabel">Attempts left</div>
-            <div id="decade-attempts-number">3</div>
-            <div id="decade-attempts-balls"></div>
+        <div class="score-row">
+            <div class="live-badge" data-i18n="liveBadge">LIVE</div>
+            <div id="decade-attempts-counter">
+                <div class="attempts-title" data-i18n="decadeAttemptsLabel">Lives</div>
+                <div id="decade-attempts-number">3</div>
+            </div>
+            <div id="decade-attempts-balls" class="lives-row"></div>
         </div>
 
         <div id="decade-instructions" data-i18n="decadeInstructions">
@@ -171,6 +191,11 @@
     <div id="victory-overlay" class="hidden">
         <div id="victory-card">
             <button id="close-victory-btn" class="modal-close-x" aria-label="Close">✕</button>
+            <!-- Rótulo de final de partido: "FINAL | TEAMS · 2 OCT" -->
+            <div class="result-banner">
+                <span class="result-banner-key" data-i18n="resultBannerKey">FULL TIME</span>
+                <span class="result-banner-value" id="result-banner-value"></span>
+            </div>
             <div class="confetti-emoji">🏆</div>
             <h2 id="victory-heading" data-i18n="victoryTitle">Victory!</h2>
             <p id="victory-message">
@@ -184,7 +209,7 @@
             </div>
             <div id="mini-stats"></div>
             <div id="countdown-box">
-                <div class="countdown-label" data-i18n="nextGameIn">Next team in</div>
+                <div class="countdown-label" data-i18n="nextGameIn">Next match in</div>
                 <div id="countdown-timer">--:--:--</div>
             </div>
             <button id="share-result-btn" data-i18n="shareBtn">Share result</button>
@@ -243,9 +268,15 @@
         <button id="about-btn" class="footer-link" data-i18n="aboutBtn">About & Credits</button>
     </footer>
 
+    <!-- Barra de noticias tipo TV (mensajes en script.js: TICKER_MESSAGES) -->
+    <div id="news-ticker">
+        <div class="ticker-tag">RONDO TV</div>
+        <div class="ticker-viewport"><div id="ticker-track"></div></div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-    <script src="decade_events.js"></script>
-    <script src="script.js"></script>
+    <script src="decade_events.js?v=20261002"></script>
+    <script src="script.js?v=20261002"></script>
 
     <!-- Banner de consentimiento -->
     <div id="consent-banner" class="consent-banner hidden">

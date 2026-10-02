@@ -6,7 +6,8 @@ Juego diario de fútbol estilo Wordle. Bilingüe ES/EN. Vanilla JS + HTML + CSS,
 
 - `index.html`: estructura de los 3 modos, modales (victoria, stats, level-up, about, info) y banner de cookies
 - `script.js`: toda la lógica (traducciones, datos de equipos y legends, los 3 modos, stats, rachas)
-- `style.css`: estilos. Verde Rondo = `#2ed573`
+- `style.css`: estilos. Verde Rondo = `#2ed573`. Variables de tema en `:root` al principio del archivo
+- `api/news.js`: función serverless de Vercel (`/api/news`). Lee titulares RSS (ES: Marca, AS, Mundo Deportivo; EN: BBC, Guardian, ESPN), descarta los de más de 3 días y cachea 30 min. Solo titular + medio + enlace
 - `decade_events.js`: 216 eventos del modo Decade (1950-2026), con `text` y `description` como `{ es, en }`
 - `.claude/serve.ps1` + `.claude/launch.json`: servidor estático local en PowerShell (puerto 8080) para la vista previa, sin instalar nada
 
@@ -15,6 +16,19 @@ Juego diario de fútbol estilo Wordle. Bilingüe ES/EN. Vanilla JS + HTML + CSS,
 - Equipos: temporada 2026-27 (96). `budget` = valor de plantilla Transfermarkt en M€; `yearsInFirst` incluye la temporada actual. Al cambiar de temporada, actualizar ascensos/descensos, marcas, estadios, títulos y sumar temporadas.
 - Legends: 88. Fotos solo de Wikimedia Commons, sin el nombre visible en la imagen.
 - Cambiar el número de equipos/leyendas/eventos cambia el reto del día en que se publica.
+
+## Diseño "Verde Rondo TV"
+
+Estilo de retransmisión deportiva: fondo verde oscuro con franjas, tipografías Teko (marcador, títulos, números) e Inter (texto), rótulos en paralelogramo (`clip-path: var(--para)`).
+
+- Cabecera `#app-header`: banderas de idioma, racha, ❔ y 📊; pestañas de modo con icono por CSS y ✓ (`.played-today`) si ya se jugó hoy
+- Cada modo: logo `.brand` (RONDO + rótulo del modo) y `.score-row` (🔴 EN DIRECTO + marcador de intentos/vidas; balones en `.lives-row`)
+- Teams: casillas cuadradas que entran deslizándose; verde = acierto, amarillo = cerca, rojo = no coincide. En móvil el nombre del equipo va encima de las casillas
+- Legends: foto como "REPETICIÓN" con esquinas de cámara; la pista del año es un rótulo inferior dentro de la foto; fallos como etiquetas rojas
+- Decade: línea de tiempo numerada 1-5; huecos 1 y 5 muestran "más antiguo/más reciente"
+- Resultado: rótulo "FINAL | MODO · FECHA", "¡GOLAZO!" (victoria) / "¡AL PALO!" (derrota)
+- Barra `#news-ticker` fija abajo: titulares de `/api/news` + mensajes fijos `TICKER_MESSAGES`. En local (servidor PowerShell) no hay `/api`, así que solo salen los fijos
+- Maquetas de diseño en `mockups/` (no se sube a GitHub)
 
 ## Modos
 
@@ -44,6 +58,7 @@ Cada modo tiene racha independiente con evolución del balón en 3, 5, 10, 20, 5
 - Commits en `main` con mensajes descriptivos, desde PowerShell
 - Publicación: Vercel despliega automáticamente cada push a `main` en https://playrondo.app (en 1-2 min). Ojo: playrondo.com NO es nuestro, es otra web.
 - Probar en local antes de subir. Reset completo: `localStorage.clear(); location.reload();`
+- Al publicar cambios de `style.css`, `script.js` o `decade_events.js`, actualizar el `?v=AAAAMMDD` de sus enlaces en `index.html` para que los navegadores no usen la versión vieja
 
 ## TODO pendiente
 
