@@ -32,6 +32,11 @@ Estilo de retransmisión deportiva: fondo verde oscuro con franjas, tipografías
 - Barra `#news-ticker` fija abajo: titulares de `/api/news` + mensajes fijos `TICKER_MESSAGES`. En local (servidor PowerShell) no hay `/api`, así que solo salen los fijos
 - Maquetas de diseño en `mockups/` (no se sube a GitHub)
 
+## Rondo Studio (vídeos para redes)
+
+- `/studio/` (noindex, excluido en robots.txt): genera vídeos verticales 1080x1920 (~19 s, MP4 si el navegador lo permite) con canvas + MediaRecorder: "¿Adivinas el equipo?" (7 pistas, cuenta atrás, escudo) y "¿Quién es esta leyenda?" (foto pixelada que se aclara). Usa el reto de ayer o uno al azar, **nunca el de hoy**. En el móvil, botón Compartir (Web Share con archivo) directo a TikTok/Instagram/YouTube
+- Escudos para canvas: hacen falta URLs con CORS (`crestUrls` en studio.js: miniatura directa de upload.wikimedia.org de 500px, primero /en/ y luego /commons/, o logoUrl de Transfermarkt). Special:FilePath no sirve en canvas
+
 ## Compartir, retos, idioma y analíticas
 
 - `buildShareText()`: "⚽ RONDO · Teams dd/mm", resultado, racha, cuadrícula y enlace de reto. La cuadrícula se guarda en `lastResult.grid` (`recordGameResult(..., grid)`) para poder compartir tras recargar

@@ -54,7 +54,7 @@ const teams = [
     // ITALIA
     { name: "Inter Milan", slug: "inter", wikiFile: "FC_Internazionale_Milano_2021.svg", league: "Serie A", titles: 47, kitColor: "Azulnegro", budget: 738, yearsInFirst: 95, brand: "Nike", capacity: 75817 },
     { name: "AC Milan", slug: "ac-milan", wikiFile: "Logo_of_AC_Milan.svg", league: "Serie A", titles: 49, kitColor: "Rojinegro", budget: 503, yearsInFirst: 93, brand: "Puma", capacity: 75817 },
-    { name: "Juventus", slug: "juventus", wikiFile: "Juventus_FC_2017_logo.svg", league: "Serie A", titles: 71, kitColor: "Blanquinegro", budget: 614, yearsInFirst: 94, brand: "Adidas", capacity: 41507 },
+    { name: "Juventus", slug: "juventus", logoUrl: "https://tmssl.akamaized.net/images/wappen/head/506.png", league: "Serie A", titles: 71, kitColor: "Blanquinegro", budget: 614, yearsInFirst: 94, brand: "Adidas", capacity: 41507 },
     { name: "Napoli", slug: "napoli", wikiFile: "SSC_Neapel.svg", league: "Serie A", titles: 13, kitColor: "Celeste", budget: 425, yearsInFirst: 81, brand: "EA7", capacity: 54726 },
     { name: "AS Roma", slug: "roma", wikiFile: "AS_Roma_logo_(2017).svg", league: "Serie A", titles: 16, kitColor: "Granate", budget: 498, yearsInFirst: 94, brand: "Adidas", capacity: 70634 },
     { name: "Lazio", slug: "lazio", wikiFile: "S.S._Lazio_badge.svg", league: "Serie A", titles: 16, kitColor: "Celeste", budget: 262, yearsInFirst: 84, brand: "Mizuno", capacity: 70634 },

@@ -53,8 +53,7 @@ a { color: var(--rondo-green); }
     font-size: 1.9rem;
     line-height: 1;
 }
-.logo-link .ron { background: var(--rondo-green); color: var(--rondo-ink); padding: 7px 10px 1px 14px; clip-path: var(--para-wide); }
-.logo-link .do { background: #fff; color: var(--bg-top); padding: 7px 14px 1px 12px; margin-left: -8px; clip-path: var(--para-wide); }
+.logo-link .ron { background: var(--rondo-green); color: var(--rondo-ink); padding: 7px 16px 1px; clip-path: var(--para-wide); }
 .site-nav { display: flex; gap: 4px; flex-wrap: wrap; }
 .site-nav a {
     background: var(--panel);

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rondo Studio</title>
+    <!-- Herramienta interna: no indexar -->
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <meta name="theme-color" content="#0f3d27">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/pages/pages.css">
+    <style>
+        .studio { max-width: 760px; margin: 0 auto; padding: 16px 16px 60px; }
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 14px 0; }
+        .controls label { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+        .controls select { background: var(--panel); color: #fff; border: 0; border-left: 4px solid var(--rondo-green); padding: 10px; font: inherit; font-size: 0.95rem; text-transform: none; letter-spacing: 0; }
+        .controls option { background: #082416; }
+        .preview-wrap { display: flex; justify-content: center; margin: 10px 0; }
+        canvas { width: min(100%, 360px); aspect-ratio: 9 / 16; background: #000; border: 2px solid rgba(46, 213, 115, 0.4); }
+        .actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .actions button, .actions a { border: 0; cursor: pointer; text-decoration: none; font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1; padding: 11px 26px 6px; clip-path: var(--para-wide); background: rgba(255,255,255,0.12); color: #fff; }
+        .actions .primary { background: var(--rondo-green); color: var(--rondo-ink); }
+        .actions [hidden] { display: none; }
+        .actions button:disabled { opacity: 0.5; cursor: wait; }
+        #status { text-align: center; color: var(--muted); font-size: 0.9rem; min-height: 1.4em; margin: 8px 0; }
+        textarea { width: 100%; min-height: 110px; background: var(--panel-dark); color: #fff; border: 0; border-left: 4px solid #fff; padding: 10px; font: inherit; font-size: 0.9rem; }
+        .answer-peek { font-size: 0.85rem; color: var(--muted); text-align: center; }
+    </style>
+</head>
+<body>
+    <main class="studio">
+        <h1>Rondo <em>Studio</em></h1>
+        <p class="lead">Genera un vídeo vertical para TikTok, Reels o Shorts. Usa el reto de ayer o uno al azar, nunca el de hoy.</p>
+
+        <div class="controls">
+            <label>Formato
+                <select id="format">
+                    <option value="team">¿Adivinas el equipo?</option>
+                    <option value="legend">¿Quién es esta leyenda?</option>
+                </select>
+            </label>
+            <label>Idioma
+                <select id="lang">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                </select>
+            </label>
+            <label>Respuesta
+                <select id="source">
+                    <option value="yesterday">La de ayer</option>
+                    <option value="random">Al azar (no la de hoy)</option>
+                </select>
+            </label>
+        </div>
+
+        <p class="answer-peek" id="answer-peek"></p>
+        <div class="preview-wrap"><canvas id="canvas" width="1080" height="1920"></canvas></div>
+        <p id="status"></p>
+
+        <div class="actions">
+            <button id="preview-btn">▶ Vista previa</button>
+            <button id="record-btn" class="primary">● Generar vídeo</button>
+            <button id="share-btn" class="primary" hidden>Compartir</button>
+            <a id="download-link" class="primary" hidden>Descargar</a>
+        </div>
+
+        <h2>Texto para la publicación</h2>
+        <textarea id="caption" readonly></textarea>
+        <div class="actions"><button id="copy-btn">Copiar texto</button></div>
+    </main>
+
+    <script src="/decade_events.js?v=20261002"></script>
+    <script src="/data.js?v=20261003"></script>
+    <script src="/studio/studio.js?v=20261003b"></script>
+</body>
+</html>
