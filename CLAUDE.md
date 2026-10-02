@@ -62,8 +62,8 @@ Cada modo tiene racha independiente con evolución del balón en 3, 5, 10, 20, 5
 
 ## TODO pendiente
 
-1. Logo + favicon + imagen Open Graph (1200x630) + apple-touch-icon + manifest.json
-2. SEO: meta tags, Open Graph / Twitter Card, schema.org, sitemap.xml, robots.txt
+1. ~~Logo, favicon, iconos, manifest e imagen Open Graph~~ Hecho: logo (R en rótulo verde + punto rojo "en directo"), favicon.ico, `icons/` (16, 32, 180, 192, 512, maskable), manifest.json e `icons/og-image.jpg` (1200x630, con meta og:/twitter: en index.html). Los dibujos están en `icons/logo.html` (`drawChosen` y `drawOG`) por si hay que regenerarlos
+2. SEO: schema.org, sitemap.xml, robots.txt (meta description y Open Graph / Twitter Card ya están)
 3. Analíticas: eventos custom en GA (modo jugado, victorias, shares)
 4. Revisar y optimizar el texto del botón de compartir (que incluya siempre el link)
 5. Difusión: directorios de Wordle-likes, AlternativeTo, SaaSHub, Indie Hackers, r/SideProject, r/InternetIsBeautiful, Product Hunt (tras tener Open Graph), Show HN, streamers de Twitch, Discord

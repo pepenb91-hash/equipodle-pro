@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rondo · Propuestas de logo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #1b1d22; color: #e8e8e8; font-family: Inter, system-ui, sans-serif; padding: 32px 16px 64px; }
+    .page-head { max-width: 1100px; margin: 0 auto 28px; }
+    .page-head h1 { font-size: 22px; font-weight: 800; }
+    .page-head p { color: #a0a4ab; margin-top: 6px; font-size: 14px; max-width: 760px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 28px; max-width: 1100px; margin: 0 auto; }
+    .option { background: #24272d; border-radius: 14px; padding: 18px; }
+    .label { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #a0a4ab; }
+    .title { font-size: 19px; font-weight: 800; margin: 2px 0 4px; }
+    .desc { font-size: 13px; color: #b9bdc4; min-height: 36px; margin-bottom: 12px; }
+    .big { width: 100%; aspect-ratio: 1; border-radius: 22%; display: block; }
+    .row { display: flex; align-items: flex-end; gap: 16px; margin-top: 14px; }
+    .home { text-align: center; font-size: 11px; color: #ddd; }
+    .home canvas { width: 60px; height: 60px; border-radius: 22%; display: block; margin-bottom: 4px; }
+    .tab { flex: 1; display: flex; align-items: center; gap: 8px; background: #3a3d44; border-radius: 8px 8px 0 0; padding: 8px 10px; font-size: 12px; color: #eee; white-space: nowrap; overflow: hidden; }
+    .tab canvas { width: 16px; height: 16px; flex-shrink: 0; }
+    .tab.light { background: #f1f3f4; color: #222; }
+    .px16 { display: flex; gap: 6px; align-items: center; margin-top: 10px; font-size: 11px; color: #a0a4ab; }
+    .px16 canvas { image-rendering: pixelated; width: 32px; height: 32px; border: 1px solid #444; }
+</style>
+</head>
+<body>
+    <div class="page-head">
+        <h1>Rondo · Propuestas de logo y favicon</h1>
+        <p>Cada icono en grande (512 px, icono de app), en la pantalla de inicio del móvil (180 px), en una pestaña del navegador oscura y clara, y ampliado a 16 px (el tamaño más pequeño) para ver si se sigue entendiendo.</p>
+    </div>
+    <div class="grid" id="grid"></div>
+
+<script>
+    const C = { green: '#2ed573', greenDark: '#18a352', ink: '#04170c', top: '#0f3d27', mid: '#082416', bottom: '#03110a', white: '#ffffff', red: '#ff3b3b' };
+
+    function bg(ctx, s) {
+        const g = ctx.createLinearGradient(0, 0, s * 0.4, s);
+        g.addColorStop(0, C.top); g.addColorStop(0.6, C.mid); g.addColorStop(1, C.bottom);
+        ctx.fillStyle = g; ctx.fillRect(0, 0, s, s);
+        // Franja diagonal de TV
+        ctx.save(); ctx.globalAlpha = 0.08; ctx.fillStyle = C.green;
+        ctx.beginPath(); ctx.moveTo(s * 0.62, 0); ctx.lineTo(s * 0.8, 0); ctx.lineTo(s * 0.38, s); ctx.lineTo(s * 0.2, s); ctx.closePath(); ctx.fill(); ctx.restore();
+    }
+    function para(ctx, x, y, w, h, slant, color) {
+        ctx.fillStyle = color; ctx.beginPath();
+        ctx.moveTo(x + slant, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w - slant, y + h); ctx.lineTo(x, y + h); ctx.closePath(); ctx.fill();
+    }
+    function text(ctx, str, x, y, size, color, align = 'center') {
+        ctx.fillStyle = color; ctx.font = `700 ${size}px Teko`; ctx.textAlign = align; ctx.textBaseline = 'alphabetic'; ctx.fillText(str, x, y);
+    }
+
+    // Logo elegido: R en rótulo (opción 1) + punto rojo de "EN DIRECTO" (opción 2)
+    // rounded: esquinas redondeadas (favicon); scale: margen extra para iconos "maskable" de Android
+    function drawChosen(ctx, s, { rounded = false, scale = 1 } = {}) {
+        if (rounded) {
+            const r = s * 0.2;
+            ctx.beginPath(); ctx.moveTo(r, 0); ctx.arcTo(s, 0, s, s, r); ctx.arcTo(s, s, 0, s, r); ctx.arcTo(0, s, 0, 0, r); ctx.arcTo(0, 0, s, 0, r); ctx.closePath(); ctx.clip();
+        }
+        bg(ctx, s);
+        ctx.save();
+        ctx.translate(s / 2, s / 2); ctx.scale(scale, scale); ctx.translate(-s / 2, -s / 2);
+        para(ctx, s * 0.14, s * 0.18, s * 0.68, s * 0.66, s * 0.12, C.green);
+        text(ctx, 'R', s * 0.48, s * 0.8, s * 0.72, C.ink);
+        // Punto rojo con anillo oscuro para separarlo del rótulo
+        ctx.fillStyle = C.bottom; ctx.beginPath(); ctx.arc(s * 0.8, s * 0.2, s * 0.125, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(s * 0.8, s * 0.2, s * 0.085, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+    }
+
+    // Imagen para compartir en redes (Open Graph), 1200x630
+    function drawOG(ctx, W = 1200, H = 630) {
+        const g = ctx.createLinearGradient(0, 0, W * 0.35, H);
+        g.addColorStop(0, C.top); g.addColorStop(0.6, C.mid); g.addColorStop(1, C.bottom);
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        ctx.save(); ctx.globalAlpha = 0.07; ctx.fillStyle = C.green;
+        [[700, 820], [900, 960]].forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(a, 0); ctx.lineTo(b, 0); ctx.lineTo(b - 420, H); ctx.lineTo(a - 420, H); ctx.closePath(); ctx.fill(); });
+        ctx.restore();
+
+        // Icono a la izquierda
+        const s = 300, ix = 90, iy = 120;
+        ctx.save(); ctx.translate(ix, iy);
+        para(ctx, s * 0.14, s * 0.18, s * 0.68, s * 0.66, s * 0.12, C.green);
+        text(ctx, 'R', s * 0.48, s * 0.8, s * 0.72, C.ink);
+        ctx.fillStyle = C.bottom; ctx.beginPath(); ctx.arc(s * 0.8, s * 0.2, s * 0.125, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(s * 0.8, s * 0.2, s * 0.085, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+
+        // Logo RONDO + rótulo
+        const lx = 440;
+        para(ctx, lx, 150, 330, 130, 16, C.green);
+        text(ctx, 'RON', lx + 165, 262, 132, C.ink);
+        para(ctx, lx + 314, 150, 230, 130, 16, C.white);
+        text(ctx, 'DO', lx + 314 + 115, 262, 132, C.top);
+        para(ctx, lx, 300, 600, 56, 12, 'rgba(0,0,0,0.35)');
+        text(ctx, 'THE DAILY FOOTBALL GUESSING GAME', lx + 300, 342, 40, C.white);
+
+        // Tres modos
+        const modes = ['TEAMS', 'LEGENDS', 'DECADE'];
+        modes.forEach((m, i) => {
+            const x = lx + i * 200;
+            para(ctx, x, 380, 188, 52, 10, i === 0 ? C.green : 'rgba(255,255,255,0.1)');
+            text(ctx, m, x + 94, 418, 38, i === 0 ? C.ink : C.white);
+        });
+
+        // Casillas de pista de ejemplo
+        const sq = [['#34e07c', C.ink], ['#ffd23f', '#2b1d00'], ['#ff4d5e', '#fff'], ['#34e07c', C.ink], ['#ff4d5e', '#fff'], ['#ffd23f', '#2b1d00'], ['#34e07c', C.ink]];
+        sq.forEach(([col], i) => { ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(lx + i * 62, 460, 54, 54, 5); ctx.fill(); });
+
+        // Barra inferior tipo TV
+        ctx.fillStyle = 'rgba(2,12,7,0.92)'; ctx.fillRect(0, H - 64, W, 64);
+        ctx.fillStyle = C.white; ctx.beginPath(); ctx.moveTo(0, H - 64); ctx.lineTo(250, H - 64); ctx.lineTo(236, H); ctx.lineTo(0, H); ctx.closePath(); ctx.fill();
+        text(ctx, 'RONDO TV', 120, H - 18, 40, C.top);
+        ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(290, H - 32, 9, 0, Math.PI * 2); ctx.fill();
+        text(ctx, 'LIVE', 312, H - 18, 36, '#a6d4b9', 'left');
+        text(ctx, 'PLAYRONDO.APP', W - 50, H - 18, 40, C.green, 'right');
+    }
+
+    const OPTIONS = [
+        { name: 'ELEGIDO: R en rótulo + directo', desc: 'La opción 1 con el punto rojo de “EN DIRECTO” de la opción 2.', draw: (ctx, s) => drawChosen(ctx, s) },
+        {
+            name: 'R en rótulo', desc: 'La “R” del logo dentro del rótulo verde inclinado. Directo y muy legible en pequeño.',
+            draw(ctx, s) {
+                bg(ctx, s);
+                para(ctx, s * 0.14, s * 0.16, s * 0.72, s * 0.68, s * 0.12, C.green);
+                text(ctx, 'R', s * 0.5, s * 0.79, s * 0.74, C.ink);
+            }
+        },
+        {
+            name: 'R en directo', desc: 'R blanca con barra verde de marcador y el punto rojo de “EN DIRECTO”.',
+            draw(ctx, s) {
+                bg(ctx, s);
+                text(ctx, 'R', s * 0.47, s * 0.8, s * 0.86, C.white);
+                para(ctx, s * 0.18, s * 0.8, s * 0.6, s * 0.09, s * 0.04, C.green);
+                ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(s * 0.79, s * 0.24, s * 0.09, 0, Math.PI * 2); ctx.fill();
+            }
+        },
+        {
+            name: 'El rondo', desc: 'Un “rondo” de verdad: jugadores en círculo alrededor del balón. Símbolo propio, sin letras.',
+            draw(ctx, s) {
+                bg(ctx, s);
+                const cx = s / 2, cy = s / 2, r = s * 0.3, n = 6;
+                ctx.strokeStyle = 'rgba(46,213,115,0.35)'; ctx.lineWidth = s * 0.03;
+                ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+                ctx.fillStyle = C.green;
+                for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / n; ctx.beginPath(); ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), s * 0.075, 0, Math.PI * 2); ctx.fill(); }
+                ctx.fillStyle = C.white; ctx.beginPath(); ctx.arc(cx, cy, s * 0.11, 0, Math.PI * 2); ctx.fill();
+            }
+        },
+        {
+            name: 'RON / DO', desc: 'El logo de la web en dos líneas: RON verde, DO blanco. El más reconocible en grande.',
+            draw(ctx, s) {
+                bg(ctx, s);
+                para(ctx, s * 0.1, s * 0.12, s * 0.8, s * 0.4, s * 0.07, C.green);
+                text(ctx, 'RON', s * 0.5, s * 0.47, s * 0.42, C.ink);
+                para(ctx, s * 0.1, s * 0.52, s * 0.8, s * 0.38, s * 0.07, C.white);
+                text(ctx, 'DO', s * 0.5, s * 0.85, s * 0.42, C.top);
+            }
+        },
+        {
+            name: 'R + balón', desc: 'La R en el rótulo verde con un balón que “rueda” en su esquina.',
+            draw(ctx, s) {
+                bg(ctx, s);
+                para(ctx, s * 0.12, s * 0.18, s * 0.66, s * 0.66, s * 0.11, C.green);
+                text(ctx, 'R', s * 0.45, s * 0.8, s * 0.72, C.ink);
+                const bx = s * 0.78, by = s * 0.24, br = s * 0.14;
+                ctx.fillStyle = C.white; ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = C.ink; ctx.beginPath();
+                for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / 5; const px = bx + br * 0.42 * Math.cos(a), py = by + br * 0.42 * Math.sin(a); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+                ctx.closePath(); ctx.fill();
+            }
+        }
+    ];
+
+    function canvas(opt, size) {
+        const c = document.createElement('canvas'); c.width = c.height = size;
+        opt.draw(c.getContext('2d'), size); return c;
+    }
+
+    async function render() {
+        await document.fonts.load('700 100px Teko');
+        const grid = document.getElementById('grid');
+        const og = document.createElement('canvas'); og.id = 'og'; og.width = 1200; og.height = 630;
+        og.style.cssText = 'width:100%;max-width:1100px;display:block;margin:0 auto 28px;border-radius:10px';
+        drawOG(og.getContext('2d'));
+        grid.before(og);
+        OPTIONS.forEach((opt, i) => {
+            const card = document.createElement('section'); card.className = 'option';
+            card.innerHTML = `<div class="label">Opción ${i + 1}</div><div class="title">${opt.name}</div><div class="desc">${opt.desc}</div>`;
+            const big = canvas(opt, 512); big.className = 'big'; card.appendChild(big);
+            const row = document.createElement('div'); row.className = 'row';
+            const home = document.createElement('div'); home.className = 'home'; home.appendChild(canvas(opt, 180)); home.append('Rondo'); row.appendChild(home);
+            const tabs = document.createElement('div'); tabs.style.flex = '1'; tabs.style.display = 'grid'; tabs.style.gap = '6px';
+            ['', 'light'].forEach(cls => { const t = document.createElement('div'); t.className = 'tab ' + cls; t.appendChild(canvas(opt, 32)); t.append('Rondo — The daily football…'); tabs.appendChild(t); });
+            row.appendChild(tabs); card.appendChild(row);
+            const px = document.createElement('div'); px.className = 'px16'; px.appendChild(canvas(opt, 16)); px.append('16 px ampliado'); card.appendChild(px);
+            grid.appendChild(card);
+        });
+    }
+    render();
+</script>
+</body>
+</html>
