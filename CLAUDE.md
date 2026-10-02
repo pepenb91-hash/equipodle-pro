@@ -1,4 +1,4 @@
-# Rondo (playrondo.com)
+# Rondo (playrondo.app)
 
 Juego diario de fútbol estilo Wordle. Bilingüe ES/EN. Vanilla JS + HTML + CSS, sin build ni dependencias (salvo canvas-confetti por CDN y Google Analytics).
 
@@ -42,6 +42,7 @@ Cada modo tiene racha independiente con evolución del balón en 3, 5, 10, 20, 5
 - Todo texto visible debe existir en ES y EN (diccionario de traducciones en `script.js` + atributos `data-i18n` en el HTML)
 - Terminología: "equipo misterioso" / "mystery team" (no "secreto")
 - Commits en `main` con mensajes descriptivos, desde PowerShell
+- Publicación: Vercel despliega automáticamente cada push a `main` en https://playrondo.app (en 1-2 min). Ojo: playrondo.com NO es nuestro, es otra web.
 - Probar en local antes de subir. Reset completo: `localStorage.clear(); location.reload();`
 
 ## TODO pendiente
