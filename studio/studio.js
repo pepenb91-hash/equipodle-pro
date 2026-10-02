@@ -352,5 +352,21 @@ document.getElementById('copy-btn').addEventListener('click', () => {
     navigator.clipboard.writeText(document.getElementById('caption').value).then(() => setStatus('Texto copiado.'));
 });
 
-// Primer fotograma al cargar
-document.fonts.load('700 100px Teko').then(async () => { const d = await prepare(); drawFrame(0.9, d); });
+// Modo automático (?auto=1, p. ej. desde el acceso directo "Vídeo del día"):
+// formato alterno por día (equipo / leyenda), idioma del móvil, respuesta de ayer y graba solo
+const AUTO = new URLSearchParams(location.search).has('auto');
+if (AUTO) {
+    document.getElementById('format').value = new Date().getDate() % 2 === 0 ? 'team' : 'legend';
+    document.getElementById('lang').value = (navigator.language || '').toLowerCase().startsWith('es') ? 'es' : 'en';
+    document.getElementById('source').value = 'yesterday';
+}
+
+document.fonts.load('700 100px Teko').then(async () => {
+    if (AUTO) {
+        document.getElementById('record-btn').click();
+        return;
+    }
+    // Primer fotograma al cargar
+    const d = await prepare();
+    drawFrame(0.9, d);
+});
