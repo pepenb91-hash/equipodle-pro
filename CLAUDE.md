@@ -5,7 +5,9 @@ Juego diario de fútbol estilo Wordle. Bilingüe ES/EN. Vanilla JS + HTML + CSS,
 ## Archivos
 
 - `index.html`: estructura de los 3 modos, modales (victoria, stats, level-up, about, info) y banner de cookies
-- `script.js`: toda la lógica (traducciones, datos de equipos y legends, los 3 modos, stats, rachas)
+- `data.js`: datos de equipos y legends + elección del reto diario (`dateToSeed`, `getTeamForDate`, `getLegendForDate`, `getDecadeEventsForDate`). Lo comparten el juego y las páginas de soluciones. Orden de carga: decade_events.js → data.js → script.js
+- `script.js`: toda la lógica del juego (traducciones, los 3 modos, stats, rachas, compartir, retos)
+- Páginas de contenido (SEO), con estilos en `pages/pages.css`: `/wordle-de-futbol/` (ES) y `/football-wordle/` (EN) explican el juego; `/soluciones/` (ES) y `/answers/` (EN) muestran las respuestas de ayer y los 6 días anteriores con `pages/answers.js` (nunca el día de hoy). `robots.txt` y `sitemap.xml` en la raíz
 - `style.css`: estilos. Verde Rondo = `#2ed573`. Variables de tema en `:root` al principio del archivo
 - `api/news.js`: función serverless de Vercel (`/api/news`). Lee titulares RSS (ES: Marca, AS, Mundo Deportivo; EN: BBC, Guardian, ESPN), descarta los de más de 3 días y cachea 30 min. Solo titular + medio + enlace
 - `decade_events.js`: 216 eventos del modo Decade (1950-2026), con `text` y `description` como `{ es, en }`
@@ -64,13 +66,15 @@ Cada modo tiene racha independiente con evolución del balón en 3, 5, 10, 20, 5
 - Terminología: "equipo misterioso" / "mystery team" (no "secreto")
 - Commits en `main` con mensajes descriptivos, desde PowerShell
 - Publicación: Vercel despliega automáticamente cada push a `main` en https://playrondo.app (en 1-2 min). Ojo: playrondo.com NO es nuestro, es otra web.
+- Dominio en Namecheap (Advanced DNS). Registros necesarios: **A `@` → 216.198.79.1** (Vercel) y TXT `@` → google-site-verification (Search Console, propiedad de dominio). Si se borra el A, la web deja de cargar (pasó el 2026-10-02). Activar la renovación automática del dominio (caduca 2027-04-22)
+- Google Search Console verificado (propiedad de dominio). Al enviar el sitemap hay que poner la URL completa: https://playrondo.app/sitemap.xml
 - Probar en local antes de subir. Reset completo: `localStorage.clear(); location.reload();`
 - Al publicar cambios de `style.css`, `script.js` o `decade_events.js`, actualizar el `?v=AAAAMMDD` de sus enlaces en `index.html` para que los navegadores no usen la versión vieja
 
 ## TODO pendiente
 
 1. ~~Logo, favicon, iconos, manifest e imagen Open Graph~~ Hecho: logo (R en rótulo verde + punto rojo "en directo"), favicon.ico, `icons/` (16, 32, 180, 192, 512, maskable), manifest.json e `icons/og-image.jpg` (1200x630, con meta og:/twitter: en index.html). Los dibujos están en `icons/logo.html` (`drawChosen` y `drawOG`) por si hay que regenerarlos
-2. SEO: schema.org, sitemap.xml, robots.txt (meta description y Open Graph / Twitter Card ya están)
+2. ~~SEO básico~~ Hecho: schema.org, sitemap, robots, canonical, landings ES/EN y páginas de soluciones. Pendiente: Bing Webmaster Tools, revisar en Search Console qué búsquedas traen visitas
 3. ~~Analíticas~~ Hecho (ver `trackEvent`). Pendiente: marcar los eventos como "clave" en GA4 si se quieren ver como conversiones
 4. ~~Botón de compartir~~ Hecho: texto nuevo con enlace de reto
 5. Difusión: directorios de Wordle-likes, AlternativeTo, SaaSHub, Indie Hackers, r/SideProject, r/InternetIsBeautiful, Product Hunt (tras tener Open Graph), Show HN, streamers de Twitch, Discord
