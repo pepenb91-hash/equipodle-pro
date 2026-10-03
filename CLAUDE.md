@@ -11,6 +11,7 @@ Juego diario de fútbol estilo Wordle. Bilingüe ES/EN. Vanilla JS + HTML + CSS,
 - `style.css`: estilos. Verde Rondo = `#2ed573`. Variables de tema en `:root` al principio del archivo
 - `api/news.js`: función serverless de Vercel (`/api/news`). Lee titulares RSS (ES: Marca, AS, Mundo Deportivo; EN: BBC, Guardian, ESPN), descarta los de más de 3 días y cachea 30 min. Solo titular + medio + enlace
 - `api/daily-post.js` + cron de `vercel.json` (06:00 UTC): publica a diario las respuestas de ayer en Bluesky (@playrondo.bsky.social, ES + EN) y Telegram (t.me/playrondo, ES). Variables en Vercel: `BLUESKY_HANDLE`, `BLUESKY_APP_PASSWORD`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHANNEL`, `CRON_SECRET` (obligatoria). `?dry=1` muestra el texto sin publicar. Para lanzarlo a mano: Vercel → Settings → Cron Jobs → Run
+- `api/stats.js`: estadísticas globales del día ("HOY EN RONDO" en la pantalla de resultado: jugadores, % de acierto, media y "mejor que el X%", que también se añade al texto de compartir). POST suma una partida, GET la consulta. Guarda contadores anónimos en Upstash Redis (integración de Vercel, variables `KV_REST_API_URL`/`KV_REST_API_TOKEN`); máximo 10 partidas por IP (hash) y modo al día. Sin esas variables responde 503 y la caja no se muestra (igual que en local)
 - `decade_events.js`: 216 eventos del modo Decade (1950-2026), con `text` y `description` como `{ es, en }`
 - `.claude/serve.ps1` + `.claude/launch.json`: servidor estático local en PowerShell (puerto 8080) para la vista previa, sin instalar nada
 
@@ -43,7 +44,7 @@ Estilo de retransmisión deportiva: fondo verde oscuro con franjas, tipografías
 - `buildShareText()`: "⚽ RONDO · Teams dd/mm", resultado, racha, cuadrícula y enlace de reto. La cuadrícula se guarda en `lastResult.grid` (`recordGameResult(..., grid)`) para poder compartir tras recargar
 - Enlace de reto `https://playrondo.app/?c=<modo>&s=<intentos|x>`: abre ese modo, muestra `.challenge-banner` y, al terminar, la comparación (`challengeResultHtml`). Se guarda en `sessionStorage` (`rondo_challenge`) y se limpia la URL
 - Idioma: el elegido por el jugador (`localStorage` `rondo_lang`) o el del navegador (`getInitialLang()`)
-- `trackEvent()` → eventos GA4: `game_complete` (mode, won, attempts), `share` (mode, method), `challenge_open` (mode), `news_click` (source)
+- `trackEvent()` → eventos GA4: `first_guess` (mode), `game_complete` (mode, won, attempts), `share` (mode, method), `challenge_open` (mode), `news_click` (source)
 
 ## Modos
 

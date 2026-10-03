@@ -1128,6 +1128,30 @@ input:focus {
     margin-top: 2px;
 }
 
+/* "HOY EN RONDO": estadísticas de todos los jugadores del día */
+.global-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: -6px 0 16px;
+    padding: 8px 12px;
+    background: rgba(46, 213, 115, 0.1);
+    border-left: 3px solid var(--rondo-green);
+    color: #e6f5ec;
+    font-size: 0.88rem;
+    text-align: left;
+    animation: squareIn 0.35s ease;
+}
+.global-stats.hidden { display: none; }
+.global-stats-tag {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    line-height: 1;
+}
+.global-stats strong { color: var(--rondo-green); font-weight: 800; }
+
 #countdown-box {
     margin-bottom: 16px;
 }

@@ -90,7 +90,14 @@ const i18n = {
         shareInvite: "¿Lo mejoras? 👉",
         shareCopied: "¡Copiado! ✓",
         shareCopyFailed: "No se pudo copiar :(",
-        answersLink: "Soluciones de ayer"
+        answersLink: "Soluciones de ayer",
+        globalTag: "HOY EN RONDO",
+        globalPlayers: "{n} jugadores",
+        globalWinRate: "{p}% lo acertó",
+        globalAvg: "media {a} intentos",
+        globalBetter: "Mejor que el {p}% de jugadores",
+        globalFirst: "¡Eres de los primeros en jugar hoy!",
+        shareBetter: "🌍 Mejor que el {p}% hoy"
     },
     en: {
         teamsIntro: "Guess today's mystery team. Each guess will give you clues in every category.",
@@ -182,7 +189,14 @@ const i18n = {
         shareInvite: "Can you beat it? 👉",
         shareCopied: "Copied! ✓",
         shareCopyFailed: "Couldn't copy :(",
-        answersLink: "Yesterday's answers"
+        answersLink: "Yesterday's answers",
+        globalTag: "TODAY IN RONDO",
+        globalPlayers: "{n} players",
+        globalWinRate: "{p}% got it",
+        globalAvg: "avg {a} tries",
+        globalBetter: "Better than {p}% of players",
+        globalFirst: "You're one of the first to play today!",
+        shareBetter: "🌍 Better than {p}% today"
     }
 };
 
@@ -539,9 +553,81 @@ function trackEvent(name, params = {}) {
     if (typeof gtag === 'function') gtag('event', name, params);
 }
 
+// ==========  ESTADÍSTICAS GLOBALES ("HOY EN RONDO") =========
+// /api/stats suma la partida de cada jugador y devuelve { played, wins, dist }
+// (dist = victorias por número de intentos). En local no hay /api: no se muestra nada.
+const STATS_API = '/api/stats';
+const GLOBAL_MIN_PLAYERS = 5; // por debajo, solo "eres de los primeros"
+const globalStatsRequests = {};
+const globalBetterPct = {};   // % que se añade al texto de compartir
+
+function submitGlobalResult(mode, won, attempts) {
+    const date = getTodayKey();
+    globalStatsRequests[mode + date] = fetch(STATS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date, mode, won, attempts })
+    }).then(r => r.ok ? r.json() : null).catch(() => null);
+}
+
+function getGlobalStats(mode, date) {
+    const id = mode + date;
+    if (!globalStatsRequests[id]) {
+        globalStatsRequests[id] = fetch(`${STATS_API}?date=${date}&mode=${mode}`)
+            .then(r => r.ok ? r.json() : null).catch(() => null);
+    }
+    return globalStatsRequests[id];
+}
+
+// Porcentaje de los demás jugadores a los que has superado (null si no hay a quién comparar)
+function betterThanPct(stats, won, attempts) {
+    const others = stats.played - 1;
+    if (others < 1 || !won) return null;
+    let worse = stats.played - stats.wins;
+    for (const [n, count] of Object.entries(stats.dist)) if (Number(n) > attempts) worse += count;
+    return Math.min(100, Math.round(worse / others * 100));
+}
+
+async function renderGlobalStats(mode) {
+    const box = document.getElementById('global-stats');
+    box.classList.add('hidden');
+    const section = loadData()[mode];
+    const result = section.lastResult;
+    if (!result || section.lastPlayed !== getTodayKey()) return;
+
+    const stats = await getGlobalStats(mode, section.lastPlayed);
+    // Si mientras tanto se cambió de modo, no pintar
+    if (!stats || !stats.played || mode !== currentMode) return;
+
+    const dict = i18n[currentLang];
+    const attempts = Math.min(result.attempts, 50);
+    const lines = [];
+    if (stats.played < GLOBAL_MIN_PLAYERS) {
+        lines.push(`<strong>${dict.globalFirst}</strong>`);
+        delete globalBetterPct[mode];
+    } else {
+        const facts = [dict.globalPlayers.replace('{n}', stats.played)];
+        // En Teams se acierta siempre (no hay límite de intentos), así que no se muestra el %
+        if (mode !== 'teams') facts.push(dict.globalWinRate.replace('{p}', Math.round(stats.wins / stats.played * 100)));
+        let totalAttempts = 0;
+        for (const [n, count] of Object.entries(stats.dist)) totalAttempts += Number(n) * count;
+        if (stats.wins > 0) facts.push(dict.globalAvg.replace('{a}', (totalAttempts / stats.wins).toLocaleString(currentLang, { maximumFractionDigits: 1 })));
+        lines.push(`<span>${facts.join(' · ')}</span>`);
+
+        const better = betterThanPct(stats, result.won, attempts);
+        if (better !== null) {
+            lines.push(`<strong>${dict.globalBetter.replace('{p}', better)}</strong>`);
+            globalBetterPct[mode] = better;
+        }
+    }
+    box.innerHTML = `<span class="global-stats-tag">🌍 ${dict.globalTag}</span>${lines.join('')}`;
+    box.classList.remove('hidden');
+}
+
 // grid: estados de cada intento (para compartir la cuadrícula aunque se recargue la página)
 function recordGameResult(mode, won, attempts, itemName, itemWikiFile, grid = null) {
     trackEvent('game_complete', { mode, won, attempts });
+    submitGlobalResult(mode, won, attempts);
     const data = loadData();
     const section = data[mode];
     const previousStreak = section.stats.currentStreak;
@@ -942,6 +1028,7 @@ function clearSuggestions() {
 async function makeGuess(userTeam) {
     if (gameOver) return;
     attemptsCount++;
+    if (attemptsCount === 1) trackEvent('first_guess', { mode: 'teams' });
     guessedTeams.push(userTeam.name);
     updateAttemptsUI();
 
@@ -1161,6 +1248,7 @@ function showLegendHint() {
 function makeLegendGuess(userLegend) {
     if (legendGameOver) return;
     legendAttemptsCount++;
+    if (legendAttemptsCount === 1) trackEvent('first_guess', { mode: 'legends' });
     guessedLegends.push(userLegend.name);
 
     if (userLegend.name === targetLegend.name) {
@@ -1376,6 +1464,7 @@ function showDailyResultScreen() {
     }
 
     renderMiniStats(section.stats);
+    renderGlobalStats(currentMode);
     startCountdown();
 
     victoryOverlay.classList.remove('hidden');
@@ -1545,9 +1634,11 @@ function buildShareText() {
     const modeName = dict['mode' + currentMode.charAt(0).toUpperCase() + currentMode.slice(1)];
     const outcome = won ? dict.shareSolved.replace('{n}', attemptsLabel(attempts)) : dict.shareFailed;
     const streakTxt = streak > 0 ? ' · ' + dict.shareStreak.replace('{n}', streak) : '';
+    const better = globalBetterPct[currentMode];
+    const betterTxt = won && better !== undefined ? '\n' + dict.shareBetter.replace('{p}', better) : '';
 
     return `${MODE_EMOJI[currentMode]} RONDO · ${modeName} ${dd}/${mm}\n` +
-        `${outcome}${streakTxt}\n\n` +
+        `${outcome}${streakTxt}${betterTxt}\n\n` +
         (grid ? `${grid}\n\n` : '') +
         `${dict.shareInvite} ${buildChallengeUrl(currentMode, won, attempts)}`;
 }
@@ -2143,6 +2234,7 @@ function submitDecadeAnswer() {
     if (decadePlayerOrder.some(id => id === null)) return;
 
     decadeAttemptsCount++;
+    if (decadeAttemptsCount === 1) trackEvent('first_guess', { mode: 'decade' });
     const correctOrder = getDecadeCorrectOrder();
     const slots = decadeSlotsContainer.querySelectorAll('.decade-slot-drop');
 
@@ -2309,6 +2401,7 @@ function showDecadeResultScreen() {
     });
 
     renderMiniStats(section.stats);
+    renderGlobalStats('decade');
     startCountdown();
     document.querySelector('.countdown-label').innerText = dict.nextGameIn;
 
