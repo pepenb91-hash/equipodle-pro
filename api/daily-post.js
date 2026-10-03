@@ -125,8 +125,10 @@ async function postToTelegram(posts) {
 
 module.exports = async function handler(req, res) {
     const dry = req.query && req.query.dry !== undefined;
-    // Solo el cron de Vercel (o quien tenga el secreto) puede publicar
-    if (!dry && process.env.CRON_SECRET && req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
+    // Solo el cron de Vercel (que envía CRON_SECRET) puede publicar.
+    // Sin CRON_SECRET configurado no se publica nunca, para que nadie pueda lanzarlo desde fuera
+    const secret = process.env.CRON_SECRET;
+    if (!dry && (!secret || req.headers.authorization !== `Bearer ${secret}`)) {
         return res.status(401).json({ error: 'No autorizado' });
     }
     const posts = buildPosts(loadGameData());
