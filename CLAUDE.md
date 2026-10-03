@@ -10,6 +10,7 @@ Juego diario de fútbol estilo Wordle. Bilingüe ES/EN. Vanilla JS + HTML + CSS,
 - Páginas de contenido (SEO), con estilos en `pages/pages.css`: `/wordle-de-futbol/` (ES) y `/football-wordle/` (EN) explican el juego; `/soluciones/` (ES) y `/answers/` (EN) muestran las respuestas de ayer y los 6 días anteriores con `pages/answers.js` (nunca el día de hoy). `robots.txt` y `sitemap.xml` en la raíz
 - `style.css`: estilos. Verde Rondo = `#2ed573`. Variables de tema en `:root` al principio del archivo
 - `api/news.js`: función serverless de Vercel (`/api/news`). Lee titulares RSS (ES: Marca, AS, Mundo Deportivo; EN: BBC, Guardian, ESPN), descarta los de más de 3 días y cachea 30 min. Solo titular + medio + enlace
+- `api/daily-post.js` + cron de `vercel.json` (06:00 UTC): publica a diario las respuestas de ayer en Bluesky (@playrondo.bsky.social, ES + EN) y Telegram (t.me/playrondo, ES). Variables en Vercel: `BLUESKY_HANDLE`, `BLUESKY_APP_PASSWORD`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHANNEL`, `CRON_SECRET` (obligatoria). `?dry=1` muestra el texto sin publicar. Para lanzarlo a mano: Vercel → Settings → Cron Jobs → Run
 - `decade_events.js`: 216 eventos del modo Decade (1950-2026), con `text` y `description` como `{ es, en }`
 - `.claude/serve.ps1` + `.claude/launch.json`: servidor estático local en PowerShell (puerto 8080) para la vista previa, sin instalar nada
 
