@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/daily-post.js": {
+      "includeFiles": "{data.js,decade_events.js}"
+    }
+  },
+  "crons": [
+    { "path": "/api/daily-post", "schedule": "0 6 * * *" }
+  ]
+}
