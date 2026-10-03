@@ -119,6 +119,34 @@
         text(ctx, 'PLAYRONDO.APP', W - 50, H - 18, 40, C.green, 'right');
     }
 
+    // Portada para perfiles de redes (Bluesky, X, YouTube...), 1500x500.
+    // La foto de perfil tapa la esquina inferior izquierda: el contenido va a la derecha
+    function drawBanner(ctx, W = 1500, H = 500) {
+        const g = ctx.createLinearGradient(0, 0, W * 0.4, H);
+        g.addColorStop(0, C.top); g.addColorStop(0.6, C.mid); g.addColorStop(1, C.bottom);
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        ctx.save(); ctx.globalAlpha = 0.07; ctx.fillStyle = C.green;
+        [[520, 640], [760, 820], [1180, 1300]].forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(a, 0); ctx.lineTo(b, 0); ctx.lineTo(b - 340, H); ctx.lineTo(a - 340, H); ctx.closePath(); ctx.fill(); });
+        ctx.restore();
+
+        const cx = 960;
+        para(ctx, cx - 280, 70, 560, 150, 18, C.green);
+        text(ctx, 'RONDO', cx, 198, 150, C.ink);
+        para(ctx, cx - 370, 240, 740, 62, 12, C.white);
+        text(ctx, 'EL WORDLE DEL FÚTBOL · DAILY FOOTBALL GAME', cx, 285, 36, C.top);
+
+        ['TEAMS', 'LEGENDS', 'DECADE'].forEach((m, i) => {
+            const x = cx - 300 + i * 205;
+            para(ctx, x, 322, 190, 52, 10, i === 0 ? C.green : 'rgba(255,255,255,0.12)');
+            text(ctx, m, x + 95, 360, 38, i === 0 ? C.ink : C.white);
+        });
+
+        const sq = ['#34e07c', '#ffd23f', '#ff4d5e', '#34e07c', '#ff4d5e', '#ffd23f', '#34e07c'];
+        sq.forEach((col, i) => { ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(cx - 214 + i * 62, 396, 52, 52, 5); ctx.fill(); });
+
+        text(ctx, 'PLAYRONDO.APP', W - 40, H - 22, 40, C.green, 'right');
+    }
+
     const OPTIONS = [
         { name: 'ELEGIDO: R en rótulo + directo', desc: 'La opción 1 con el punto rojo de “EN DIRECTO” de la opción 2.', draw: (ctx, s) => drawChosen(ctx, s) },
         {
