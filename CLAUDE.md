@@ -84,4 +84,4 @@ Cada modo tiene racha independiente con evolución del balón en 3, 5, 10, 20, 5
 2. ~~SEO básico~~ Hecho: schema.org, sitemap, robots, canonical, landings ES/EN y páginas de soluciones. Pendiente: Bing Webmaster Tools, revisar en Search Console qué búsquedas traen visitas
 3. ~~Analíticas~~ Hecho (ver `trackEvent`). Pendiente: marcar los eventos como "clave" en GA4 si se quieren ver como conversiones
 4. ~~Botón de compartir~~ Hecho: texto nuevo con enlace de reto
-5. Difusión: directorios de Wordle-likes, AlternativeTo, SaaSHub, Indie Hackers, r/SideProject, r/InternetIsBeautiful, Product Hunt (tras tener Open Graph), Show HN, streamers de Twitch, Discord
+5. Difusión: lo que más jugadores trae son los directorios de juegos diarios (Playlin y Dailydle, octubre de 2026). Registro y textos en `mockups/difusion/` (`kit.md`, `lanzamientos.md`). Product Hunt programado para el 2026-10-20. Pendiente: Reddit (r/WebGames, r/playmygame, r/IndieGaming, r/SideProject; r/InternetIsBeautiful prohíbe juegos), reclamar las fichas de Alldle y Dle Hunt, entrevista por escrito con Indie-cent Exposure, redes sociales con Studio
