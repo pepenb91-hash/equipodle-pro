@@ -56,7 +56,7 @@ Cada modo tiene racha independiente con evolución del balón en 3, 5, 10, 20, 5
 
 ## Funciones y variables clave
 
-- `getTodayKey()`, `dateToSeed()`: selección diaria determinista. `dateToSeed` usa hash multiplicativo con mezcla de bits (no volver a la versión lineal: provocaba rachas de 14+ días de la misma liga). Legends usa seed + 7777 y Decade seed + 13579.
+- `getTodayKey()`, `dateToSeed()`: selección diaria determinista. Hasta el 2026-10-13, azar por fecha con `dateToSeed` (hash con mezcla de bits; Legends seed + 7777, Decade seed + 13579), que repetía equipos a los pocos días. Desde `CYCLE_START` (2026-10-14), `pickFromCycle()`/`cycleOrder()` en data.js: ciclos con barajado completo (equipo cada 96 días, leyenda cada 88, momentos de Decade cada 43) y nada se repite en menos de `NO_REPEAT_DAYS` (21) al cambiar de ciclo. No tocar `CYCLE_START` ni los "salt": cambiaría retos ya publicados.
 - `loadData()`, `recordGameResult()`: persistencia en localStorage (clave `equipodle_data_v2`)
 - `currentMode`, `currentLang`, `switchMode()`, `applyLanguage()`
 - `showDailyResultScreen()`: resultado de Teams y Legends

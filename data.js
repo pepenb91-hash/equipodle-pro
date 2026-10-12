@@ -220,16 +220,98 @@ function dateToSeed(dateStr) {
     return h >>> 0;
 }
 
+// Desde CYCLE_START el reto va por ciclos: cada ciclo es un barajado de la lista completa,
+// así que un equipo/leyenda no se repite hasta que han salido todos (96/88 días), y al
+// empezar un ciclo se evita repetir lo de los últimos NO_REPEAT_DAYS días.
+// Los días anteriores a CYCLE_START usan el método antiguo (azar por fecha) para no
+// cambiar retos ya jugados ni las páginas de soluciones.
+const CYCLE_START = '2026-10-14';
+const NO_REPEAT_DAYS = 21;
+
+function dayIndex(dateKey) {
+    const [y, m, d] = dateKey.split('-').map(Number);
+    const [y0, m0, d0] = CYCLE_START.split('-').map(Number);
+    return Math.round((Date.UTC(y, m - 1, d) - Date.UTC(y0, m0 - 1, d0)) / 86400000);
+}
+
+function dateKeyFromIndex(n) {
+    const [y0, m0, d0] = CYCLE_START.split('-').map(Number);
+    return new Date(Date.UTC(y0, m0 - 1, d0) + n * 86400000).toISOString().slice(0, 10);
+}
+
+// Barajado determinista (mulberry32 + Fisher-Yates)
+function seededPermutation(length, seed) {
+    let a = seed >>> 0;
+    const rand = () => {
+        a = (a + 0x6D2B79F5) >>> 0;
+        let t = a;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    const p = [...Array(length).keys()];
+    for (let i = length - 1; i > 0; i--) {
+        const j = Math.floor(rand() * (i + 1));
+        [p[i], p[j]] = [p[j], p[i]];
+    }
+    return p;
+}
+
+const cycleCache = {};
+
+// Orden de índices del ciclo `cycle` para una lista de `length` elementos (perDay por día).
+// recentBefore(): índices de los últimos días antes de CYCLE_START (solo para el ciclo 0)
+function cycleOrder(kind, length, cycle, salt, recentBefore, perDay = 1) {
+    const id = `${kind}:${length}:${cycle}`;
+    if (cycleCache[id]) return cycleCache[id];
+    const order = seededPermutation(length, salt * 100003 + cycle);
+    const recent = cycle === 0
+        ? recentBefore()
+        : cycleOrder(kind, length, cycle - 1, salt, recentBefore, perDay).slice(-NO_REPEAT_DAYS * perDay);
+    // Lo que salió hace poco se manda al final del ciclo
+    const head = order.filter(i => !recent.includes(i));
+    const tail = order.filter(i => recent.includes(i));
+    return (cycleCache[id] = head.concat(tail));
+}
+
+function pickFromCycle(kind, list, dateKey, salt, legacyPick) {
+    const n = dayIndex(dateKey);
+    if (n < 0) return legacyPick(dateKey);
+    const recentBefore = () => {
+        const out = [];
+        for (let k = -NO_REPEAT_DAYS; k < 0; k++) out.push(list.indexOf(legacyPick(dateKeyFromIndex(k))));
+        return out;
+    };
+    const order = cycleOrder(kind, list.length, Math.floor(n / list.length), salt, recentBefore);
+    return list[order[n % list.length]];
+}
+
 // dateKey: "AAAA-MM-DD"
 function getTeamForDate(dateKey) {
-    return teams[dateToSeed(dateKey) % teams.length];
+    return pickFromCycle('teams', teams, dateKey, 1, k => teams[dateToSeed(k) % teams.length]);
 }
 
 function getLegendForDate(dateKey) {
-    return legends[(dateToSeed(dateKey) + 7777) % legends.length];
+    return pickFromCycle('legends', legends, dateKey, 2, k => legends[(dateToSeed(k) + 7777) % legends.length]);
 }
 
 function getDecadeEventsForDate(dateKey) {
+    const n = dayIndex(dateKey);
+    if (n >= 0) {
+        // Ciclos de 43 días (216 eventos / 5): ningún momento se repite dentro de un ciclo
+        const perDay = DECADE_EVENTS_PER_DAY;
+        const perCycle = Math.floor(decadeEvents.length / perDay);
+        const recentBefore = () => {
+            const out = [];
+            for (let k = -NO_REPEAT_DAYS; k < 0; k++) {
+                getDecadeEventsForDate(dateKeyFromIndex(k)).forEach(e => out.push(decadeEvents.indexOf(e)));
+            }
+            return out;
+        };
+        const order = cycleOrder('decade', decadeEvents.length, Math.floor(n / perCycle), 3, recentBefore, perDay);
+        const start = (n % perCycle) * perDay;
+        return order.slice(start, start + perDay).map(i => decadeEvents[i]);
+    }
     const seed = dateToSeed(dateKey) + 13579;
     // Barajado determinista de índices
     const indices = [...Array(decadeEvents.length).keys()];
